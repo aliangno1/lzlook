@@ -2,6 +2,8 @@ package com.lzlook.backend.bean;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class SearchResult {
     private String id;
@@ -10,5 +12,11 @@ public class SearchResult {
 
     private String title;
 
-    private String linkUrl;
+    private String url;
+
+    private String updateTime;
+
+    private String LatestChapter;
+
+    private List<Chapter> chapters;
 }

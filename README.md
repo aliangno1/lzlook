@@ -14,22 +14,20 @@ https://api.lzlook.com
 /v1/search
 
 ```json
-{
-  "list": [
-    {
-      "source": "https://www.x23us.com",
-      "novelName": "明日之劫",
-      "url": "https://www.x23us.com/html/73/73425/"
-    }
-  ]
-}
+[
+  {
+    "source": "https://www.x23us.com",
+    "title": "明日之劫",
+    "url": "https://www.x23us.com/html/73/73425/"
+  }
+]
 ```
 https://api.lzlook.com
-/v1/chapter
+/v1/novel
 
 ```json
 {
-  "novel": "明日之劫",
+  "name": "明日之劫",
   "source": "https://www.x23us.com",
   "author": "废土",
   "updateTime": "2019-04-02 07:59:51",
@@ -43,7 +41,7 @@ https://api.lzlook.com
 }
 ```
 https://api.lzlook.com
-/v1/content
+/v1/chapter
 
 ```json
 {
