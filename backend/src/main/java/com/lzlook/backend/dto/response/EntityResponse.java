@@ -29,4 +29,9 @@ public class EntityResponse<E> extends Response {
     public void setEntity(E entity) {
         this.entity = entity;
     }
+
+    public void success(E entity) {
+        super.success();
+        this.entity = entity;
+    }
 }

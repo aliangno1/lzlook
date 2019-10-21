@@ -16,12 +16,14 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service("dingdianCrawlerService")
+@Service("dingdian")
 public class DingdianCrawlerServiceImpl implements NovelCrawlerService {
 
     private final static String searchUrl = "https://www.x23us.com/modules/article/search.php?searchkey=";
 
     private final static String source = "www.x23us.com";
+
+    private final static String sourceUrl = "https://www.x23us.com";
 
     @Override
     public SearchResult search(String keyword) {
@@ -99,6 +101,28 @@ public class DingdianCrawlerServiceImpl implements NovelCrawlerService {
     }
 
     private Chapter parseChapter(String url) {
-        return null;
+        Document doc;
+        Chapter chapter = null;
+        try {
+            doc = Jsoup.connect(url).get();
+            if (doc != null) {
+                Element name = doc.select("#amain > dl > dd:nth-child(2) > h1").get(0);
+                Element contents = doc.select("#contents").get(0);
+                Element previous = doc.select("#amain > dl > dd:nth-child(3) > h3 > a:nth-child(1)").get(0);
+                Element next = doc.select("#amain > dl > dd:nth-child(3) > h3 > a:nth-child(3)").get(0);
+                chapter = new Chapter();
+                chapter.setUrl(url);
+                chapter.setName(name.html());
+                chapter.setContent(contents.html().replaceAll("\n",""));
+                chapter.setPrevious(sourceUrl + previous.attr("href"));
+                chapter.setNext(sourceUrl + next.attr("href"));
+            }
+        } catch (IOException e) {
+            System.out.println("Jsoup解析出错--dingdianCrawlerService");
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return chapter;
     }
 }

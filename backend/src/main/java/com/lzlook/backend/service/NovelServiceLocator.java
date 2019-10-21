@@ -25,8 +25,8 @@ public class NovelServiceLocator implements ApplicationContextAware {
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         novelCrawlerServiceMap = applicationContext.getBeansOfType(NovelCrawlerService.class);
-        novelSiteMap.put("www.x23us.com", "dingdianCrawlerService");
-        novelSiteMap.put("www.biquge.info", "biqugeCrawlerService");
+        novelSiteMap.put("www.x23us.com", "dingdian");
+        novelSiteMap.put("www.biquge.info", "biquge");
     }
 
     public List<SearchResult> search(String keyword) {

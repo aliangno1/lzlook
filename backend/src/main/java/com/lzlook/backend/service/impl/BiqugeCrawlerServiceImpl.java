@@ -6,7 +6,7 @@ import com.lzlook.backend.bean.SearchResult;
 import com.lzlook.backend.service.NovelCrawlerService;
 import org.springframework.stereotype.Service;
 
-@Service("biqugeCrawlerService")
+@Service("biquge")
 public class BiqugeCrawlerServiceImpl implements NovelCrawlerService {
 
     private final static String searchUrl = "";

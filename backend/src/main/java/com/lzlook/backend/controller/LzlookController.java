@@ -31,16 +31,18 @@ public class LzlookController {
     }
 
     @RequestMapping("/novel")
-    public EntityResponse<Novel> novel(@RequestParam String url){
+    public EntityResponse<Novel> novel(@RequestParam String url) {
         EntityResponse<Novel> response = new EntityResponse<>();
-        response.setEntity(novelServiceLocator.novel(url));
+        Novel novel = novelServiceLocator.novel(url);
+        response.success(novel);
         return response;
     }
 
     @RequestMapping("/chapter")
-    public EntityResponse<Chapter> chapter(@RequestParam String url){
+    public EntityResponse<Chapter> chapter(@RequestParam String url) {
         EntityResponse<Chapter> response = new EntityResponse<>();
-        response.setEntity(novelServiceLocator.chapter(url));
+        Chapter chapter = novelServiceLocator.chapter(url);
+        response.success(chapter);
         return response;
     }
 
