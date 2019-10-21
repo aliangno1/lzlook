@@ -50,7 +50,9 @@ public class DingdianCrawlerServiceImpl implements NovelCrawlerService {
 //            System.out.println(encodedKeyword);
             doc = Jsoup.connect(searchUrl + encodedKeyword).get();
             if (doc != null) {
-                Element read = doc.select(".read").get(0);
+                // todo:搜索结果为列表的情况需要处理
+                Elements reads = doc.select(".read");
+                Element read =  reads == null ? null : reads.get(0);
                 if (read != null) {
                     result = new SearchResult();
                     result.setUrl(read.attr("href"));
@@ -113,7 +115,7 @@ public class DingdianCrawlerServiceImpl implements NovelCrawlerService {
                 chapter = new Chapter();
                 chapter.setUrl(url);
                 chapter.setName(name.html());
-                chapter.setContent(contents.html().replaceAll("\n",""));
+                chapter.setContent(contents.html().replaceAll("\n", ""));
                 chapter.setPrevious(sourceUrl + previous.attr("href"));
                 chapter.setNext(sourceUrl + next.attr("href"));
             }

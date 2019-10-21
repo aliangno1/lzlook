@@ -8,13 +8,16 @@ import com.lzlook.backend.dto.response.EntityResponse;
 import com.lzlook.backend.dto.response.ListResponse;
 import com.lzlook.backend.service.NovelServiceLocator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("novel")
 public class LzlookController {
 
@@ -22,28 +25,36 @@ public class LzlookController {
     private NovelServiceLocator novelServiceLocator;
 
     @RequestMapping("/search")
-    public ListResponse<SearchResult> search(@RequestParam String keyword) {
+    public String search(@RequestParam String keyword, Model model) {
         ListResponse<SearchResult> response = new ListResponse<>();
         List<SearchResult> list = novelServiceLocator.search(keyword);
         System.out.println(JSON.toJSONString(list));
         response.success(list);
-        return response;
+        model.addAttribute("results", list);
+        return "search";
+//        return response;
     }
 
+    //    @ResponseBody
     @RequestMapping("/novel")
-    public EntityResponse<Novel> novel(@RequestParam String url) {
+    public String novel(@RequestParam String url, Model model) {
         EntityResponse<Novel> response = new EntityResponse<>();
         Novel novel = novelServiceLocator.novel(url);
         response.success(novel);
-        return response;
+        model.addAttribute("novel", novel);
+        return "novel";
+//        return response;
     }
 
+    //    @ResponseBody
     @RequestMapping("/chapter")
-    public EntityResponse<Chapter> chapter(@RequestParam String url) {
+    public String chapter(@RequestParam String url, Model model) {
         EntityResponse<Chapter> response = new EntityResponse<>();
         Chapter chapter = novelServiceLocator.chapter(url);
         response.success(chapter);
-        return response;
+        model.addAttribute("chapter", chapter);
+        return "chapter";
+//        return response;
     }
 
 }

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="chapter.name"></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body style="font-size: 1.5em">
+    <div class="container" style="margin-top: 60px;margin-bottom: 200px">
+        <div class="row" style=" margin-bottom: 40px">
+            <div class="col text-center">
+                <h1 th:text="${chapter.name}"></h1>
+            </div>
+        </div>
+        <div>
+            <p th:utext="${chapter.content}"></p>
+        </div>
+        <div class="row justify-content-around" style="margin-top: 40px">
+            <div class="col  text-center">
+                <a th:href="'/novel/chapter?url='+${chapter.previous}">上一章</a>
+            </div>
+            <div class="col text-center">
+                <a th:href="'/novel/chapter?url='+${chapter.next}">下一章</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
