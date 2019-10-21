@@ -6,20 +6,14 @@ import com.lzlook.backend.bean.SearchResult;
 import com.lzlook.backend.service.NovelCrawlerService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service("biqugeCrawlerService")
 public class BiqugeCrawlerServiceImpl implements NovelCrawlerService {
 
     private final static String searchUrl = "";
 
     @Override
-    public List<SearchResult> search(String keyword) {
-        List<SearchResult> list = new ArrayList<>();
-        SearchResult searchResult = parseSearchResult(keyword);
-        list.add(searchResult);
-        return list;
+    public SearchResult search(String keyword) {
+        return parseSearchResult(keyword);
     }
 
     @Override

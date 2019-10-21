@@ -6,10 +6,8 @@ import com.lzlook.backend.bean.Novel;
 import com.lzlook.backend.bean.SearchResult;
 import com.lzlook.backend.dto.response.EntityResponse;
 import com.lzlook.backend.dto.response.ListResponse;
-import com.lzlook.backend.service.NovelCrawlerService;
 import com.lzlook.backend.service.NovelServiceLocator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +26,7 @@ public class LzlookController {
         ListResponse<SearchResult> response = new ListResponse<>();
         List<SearchResult> list = novelServiceLocator.search(keyword);
         System.out.println(JSON.toJSONString(list));
-        response.setList(list);
+        response.success(list);
         return response;
     }
 

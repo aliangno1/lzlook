@@ -21,4 +21,17 @@ public class ListResponse<T> extends Response {
     public void setList(List<T> list) {
         this.list= list;
     }
+
+    public void success(List<T> list) {
+        super.success();
+        this.setList(list);
+    }
+
+    public void fail() {
+        super.fail();
+    }
+
+    public void fail(String msg) {
+        super.fail(msg);
+    }
 }

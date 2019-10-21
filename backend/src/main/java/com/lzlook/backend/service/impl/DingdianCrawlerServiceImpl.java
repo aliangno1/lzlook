@@ -4,22 +4,25 @@ import com.lzlook.backend.bean.Chapter;
 import com.lzlook.backend.bean.Novel;
 import com.lzlook.backend.bean.SearchResult;
 import com.lzlook.backend.service.NovelCrawlerService;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 @Service("dingdianCrawlerService")
 public class DingdianCrawlerServiceImpl implements NovelCrawlerService {
 
-    private final static String searchUrl = "";
+    private final static String searchUrl = "https://www.x23us.com/modules/article/search.php?searchkey=";
+
+    private final static String source = "www.x23us.com";
 
     @Override
-    public List<SearchResult> search(String keyword) {
-        List<SearchResult> list = new ArrayList<>();
-        SearchResult searchResult = parseSearchResult(keyword);
-        list.add(searchResult);
-        return list;
+    public SearchResult search(String keyword) {
+        return parseSearchResult(keyword);
     }
 
     @Override
@@ -34,7 +37,31 @@ public class DingdianCrawlerServiceImpl implements NovelCrawlerService {
 
 
     private SearchResult parseSearchResult(String keyword) {
-        return null;
+        String encodedKeyword;
+        Document doc = null;
+        try {
+            encodedKeyword = URLEncoder.encode(keyword, "GBK");
+//            System.out.println(encodedKeyword);
+            doc = Jsoup.connect(searchUrl + encodedKeyword).get();
+        } catch (UnsupportedEncodingException e) {
+            System.out.println("URLEncoder encode出错--dingdianCrawlerService");
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            System.out.println("Jsoup解析出错--dingdianCrawlerService");
+            e.printStackTrace();
+        }
+        SearchResult result = null;
+        if (doc != null) {
+            Element read = doc.select(".read").get(0);
+            if (read != null) {
+                result = new SearchResult();
+                result.setUrl(read.attr("href"));
+                result.setTitle(doc.title());
+                result.setSource(source);
+            }
+        }
+        return result;
     }
 
     private Novel parseNovel(String url) {

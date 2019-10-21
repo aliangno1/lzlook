@@ -1,5 +1,8 @@
 package com.lzlook.backend.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(value= JsonInclude.Include.NON_NULL)
 public class Response {
 
     private String msg;
@@ -43,5 +46,17 @@ public class Response {
 
     public static final int CODE_UNAUTHORIZED = -1;
 
+    protected void success() {
+        this.code = Response.SUCCESS;
+    }
+
+    protected void fail(String msg) {
+        this.code = Response.FAILED_WITH_INFO;
+        this.msg = msg;
+    }
+
+    protected void fail() {
+        this.code = Response.FAILED;
+    }
 }
 

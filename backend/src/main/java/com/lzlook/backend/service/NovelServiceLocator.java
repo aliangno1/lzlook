@@ -1,10 +1,8 @@
 package com.lzlook.backend.service;
 
-import com.alibaba.fastjson.JSON;
 import com.lzlook.backend.bean.Chapter;
 import com.lzlook.backend.bean.Novel;
 import com.lzlook.backend.bean.SearchResult;
-import com.lzlook.backend.service.NovelCrawlerService;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -31,17 +29,13 @@ public class NovelServiceLocator implements ApplicationContextAware {
         novelSiteMap.put("www.biquge.info", "biqugeCrawlerService");
     }
 
-    public Map<String, NovelCrawlerService> getNovelCrawlerServiceMap(String keyword) {
-        System.out.println(JSON.toJSONString(novelCrawlerServiceMap));
-        return novelCrawlerServiceMap;
-    }
-
     public List<SearchResult> search(String keyword) {
-        System.out.println(JSON.toJSONString(novelCrawlerServiceMap));
         List<SearchResult> results = new ArrayList<>();
         for (NovelCrawlerService novelCrawler : novelCrawlerServiceMap.values()) {
-            List<SearchResult> result = novelCrawler.search(keyword);
-            results.addAll(result);
+            SearchResult result = novelCrawler.search(keyword);
+            if(result != null){
+                results.add(result);
+            }
         }
         return results;
     }
