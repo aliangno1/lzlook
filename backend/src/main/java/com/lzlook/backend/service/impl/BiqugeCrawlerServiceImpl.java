@@ -12,26 +12,36 @@ import java.util.List;
 @Service("biqugeCrawlerService")
 public class BiqugeCrawlerServiceImpl implements NovelCrawlerService {
 
+    private final static String searchUrl = "";
+
     @Override
     public List<SearchResult> search(String keyword) {
         List<SearchResult> list = new ArrayList<>();
-        SearchResult searchResult = new SearchResult();
-        searchResult.setTitle("成功使用笔趣阁了么？");
+        SearchResult searchResult = parseSearchResult(keyword);
         list.add(searchResult);
         return list;
     }
 
     @Override
     public Novel novel(String url) {
-        Novel novel = new Novel();
-        novel.setName("变成血族是什么体验？");
-        return novel;
+        return parseNovel(url);
     }
 
     @Override
     public Chapter chapter(String url) {
-        Chapter chapter = new Chapter();
-        chapter.setName("拆礼物");
-        return chapter;
+        return parseChapter(url);
+    }
+
+
+    private SearchResult parseSearchResult(String keyword) {
+        return null;
+    }
+
+    private Novel parseNovel(String url) {
+        return null;
+    }
+
+    private Chapter parseChapter(String url) {
+        return null;
     }
 }
