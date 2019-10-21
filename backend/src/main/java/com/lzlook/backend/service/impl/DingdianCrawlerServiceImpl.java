@@ -7,11 +7,14 @@ import com.lzlook.backend.service.NovelCrawlerService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service("dingdianCrawlerService")
 public class DingdianCrawlerServiceImpl implements NovelCrawlerService {
@@ -38,11 +41,21 @@ public class DingdianCrawlerServiceImpl implements NovelCrawlerService {
 
     private SearchResult parseSearchResult(String keyword) {
         String encodedKeyword;
-        Document doc = null;
+        Document doc;
+        SearchResult result = null;
         try {
             encodedKeyword = URLEncoder.encode(keyword, "GBK");
 //            System.out.println(encodedKeyword);
             doc = Jsoup.connect(searchUrl + encodedKeyword).get();
+            if (doc != null) {
+                Element read = doc.select(".read").get(0);
+                if (read != null) {
+                    result = new SearchResult();
+                    result.setUrl(read.attr("href"));
+                    result.setTitle(doc.title());
+                    result.setSource(source);
+                }
+            }
         } catch (UnsupportedEncodingException e) {
             System.out.println("URLEncoder encode出错--dingdianCrawlerService");
             e.printStackTrace();
@@ -50,22 +63,39 @@ public class DingdianCrawlerServiceImpl implements NovelCrawlerService {
         } catch (IOException e) {
             System.out.println("Jsoup解析出错--dingdianCrawlerService");
             e.printStackTrace();
-        }
-        SearchResult result = null;
-        if (doc != null) {
-            Element read = doc.select(".read").get(0);
-            if (read != null) {
-                result = new SearchResult();
-                result.setUrl(read.attr("href"));
-                result.setTitle(doc.title());
-                result.setSource(source);
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return result;
     }
 
     private Novel parseNovel(String url) {
-        return null;
+        Document doc;
+        Novel novel = null;
+        try {
+            doc = Jsoup.connect(url).get();
+            if (doc != null) {
+                Elements chapterNodes = doc.select("#at > tbody > tr > td> a");
+                if (chapterNodes != null) {
+                    novel = new Novel();
+                    novel.setSource(url);
+                    List<Chapter> chapters = new ArrayList<>();
+                    for (Element chapterNode : chapterNodes) {
+                        Chapter chapter = new Chapter();
+                        chapter.setUrl(url + chapterNode.attr("href"));
+                        chapter.setName(chapterNode.html());
+                        chapters.add(chapter);
+                    }
+                    novel.setChapters(chapters);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Jsoup解析出错--dingdianCrawlerService");
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return novel;
     }
 
     private Chapter parseChapter(String url) {

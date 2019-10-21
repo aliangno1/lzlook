@@ -58,7 +58,7 @@ public class NovelServiceLocator implements ApplicationContextAware {
             e.printStackTrace();
             return null;
         }
-        return novelCrawlerServiceMap.get(site);
+        return site == null ? null :novelCrawlerServiceMap.get(site);
     }
 
 
