@@ -7,16 +7,25 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-<div class="container">
-    <table>
-        <tbody>
-        <tr th:each="chapter: ${novel.chapters}">
-            <td>
-                <a th:text="${chapter.name}" th:href="'/novel/chapter?url='+${chapter.url}"></a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+<div class="container-fluid" style="margin-top: 60px;">
+    <div class="card">
+        <div class="card-header text-center">
+            <h5 th:text="${novel.name}"></h5>
+        </div>
+        <div class="card-body">
+            <div class="card-text">
+                <table class="table">
+                    <tbody>
+                    <tr th:each="chapter: ${novel.chapters}">
+                        <td>
+                            <a th:text="${chapter.name}" th:href="'/novel/chapter?url='+${chapter.url}"></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

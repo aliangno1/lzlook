@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Service("www.x23us.com")
+//@Service("www.x23us.com")
 public class DingdianCrawlerServiceImpl implements NovelCrawlerService {
 
     private final static String searchUrl = "https://www.x23us.com/modules/article/search.php?searchkey=";

@@ -2,32 +2,38 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Search Result</title>
+    <title>搜索结果-lzlook</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-<div class="container">
-    <div>
-        <h1>搜索结果</h1>
-        <div>
-            <ul>
-                <li th:each="result:${results}">
-                    <div th:if="${result.parsed}">
-                        <a th:href="'/novel/novel?url='+${result.url}" th:text="${result.title}"></a>
-                    </div>
-                    <div th:unless="${result.parsed}">
-                        <a th:href="@{${result.url}}" th:text="${result.title}"></a>
-                    </div>
-                    <div>
+<div class="container-fluid">
+    <div class="jumbotron">
+        <h1 class="display-4">搜索结果</h1>
+        <p class="lead">lzlook-网络小说搜索引擎</p>
+    </div>
+    <br>
+    <div class="jumbotron">
+        <div class="row" th:each="result:${results}">
+            <div class="col-xs-8">
+                <a th:if="${result.parsed}" th:href="'/novel/novel?url='+${result.url}">
+                    <h5 class="font-weight-bold" th:text="${result.title}"></h5>
+                </a>
+                <a th:unless="${result.parsed}" th:href="@{${result.url}}">
+                    <h5 class="font-weight-bold" th:text="${result.title}"></h5>
+                </a>
+                <div class="row justify-content-between" style="margin-left: 10px">
+                    <div class="col-xs-6">
                         <label th:text="${result.source}"></label>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
                         <a th:href="${result.url}">查看原网址</a>
                     </div>
-                    <div th:if="${result.parsed}">
-                        推荐源
+                    <div class="col-xs-6 text-center">
+                        <div th:if="${result.parsed}" class="text-end" style="color: orange;">推荐源</div>
                     </div>
-                </li>
-            </ul>
+                </div>
+                <br>
+            </div>
         </div>
     </div>
 </div>

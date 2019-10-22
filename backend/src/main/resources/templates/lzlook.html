@@ -5,15 +5,30 @@
     <title>lzlook</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        body{
+            width: 100%;
+        }
+        .header{
+            margin-top: 300px;
+        }
+    </style>
 </head>
 <body>
-<div class="container" style="margin: 60px auto">
+<div class="container-fluid">
+    <div class="row header">
+        <div class="col text-center">
+            <h1>Welcome to lzlook</h1>
+        </div>
+    </div>
     <div class="row justify-content-center">
-        <div class="col-10 text-center">
-            <h1>lzlook</h1>
+        <div class="col-xl-5 col-lg-7 col-md-9 col-sm-12 text-center">
             <form action="#" th:action="@{/novel/search}" method="get">
-                <input type="text" name="keyword"/>
-                <input type="submit" value="Search" class="btn btn-primary"/>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="keyword" placeholder="请输入小说名"
+                           style="margin: 30px auto"/>
+                    <button type="submit" class="btn btn-dark">Lz Search</button>
+                </div>
             </form>
         </div>
     </div>
