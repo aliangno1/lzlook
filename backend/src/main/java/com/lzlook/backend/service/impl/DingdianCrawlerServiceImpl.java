@@ -3,6 +3,7 @@ package com.lzlook.backend.service.impl;
 import com.lzlook.backend.bean.Chapter;
 import com.lzlook.backend.bean.Novel;
 import com.lzlook.backend.bean.SearchResult;
+import com.lzlook.backend.constant.SearchType;
 import com.lzlook.backend.service.NovelCrawlerService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,6 +17,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Service("dingdian")
 public class DingdianCrawlerServiceImpl implements NovelCrawlerService {
 
@@ -27,7 +29,7 @@ public class DingdianCrawlerServiceImpl implements NovelCrawlerService {
 
     @Override
     public SearchResult search(String keyword) {
-        return parseSearchResult(keyword);
+        return parseSearchResult(keyword, SearchType.KEYWORD);
     }
 
     @Override
@@ -41,23 +43,33 @@ public class DingdianCrawlerServiceImpl implements NovelCrawlerService {
     }
 
 
-    private SearchResult parseSearchResult(String keyword) {
+    private SearchResult parseSearchResult(String keyword, SearchType type) {
         String encodedKeyword;
         Document doc;
         SearchResult result = null;
         try {
-            encodedKeyword = URLEncoder.encode(keyword, "GBK");
-//            System.out.println(encodedKeyword);
-            doc = Jsoup.connect(searchUrl + encodedKeyword).get();
+            if (type == SearchType.URL) {
+                doc = Jsoup.connect(keyword).get();
+            } else {
+                encodedKeyword = URLEncoder.encode(keyword, "GBK");
+                doc = Jsoup.connect(searchUrl + encodedKeyword).get();
+            }
             if (doc != null) {
                 // todo:搜索结果为列表的情况需要处理
                 Elements reads = doc.select(".read");
-                Element read =  reads.size() < 1 ? null : reads.get(0);
+                Element read = reads.size() < 1 ? null : reads.get(0);
                 if (read != null) {
                     result = new SearchResult();
                     result.setUrl(read.attr("href"));
                     result.setTitle(doc.title());
                     result.setSource(source);
+                } else {
+                    Elements books = doc.select("#content > table > tbody > tr > td:nth-child(1) > a");
+                    for (Element book : books) {
+                        if (book.childNodeSize() == 1) {
+                            result = parseSearchResult(book.attr("href"), SearchType.URL);
+                        }
+                    }
                 }
             }
         } catch (UnsupportedEncodingException e) {
