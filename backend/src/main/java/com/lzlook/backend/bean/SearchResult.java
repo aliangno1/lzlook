@@ -14,6 +14,8 @@ public class SearchResult {
 
     private String url;
 
+    private Boolean parsed;
+
     private String updateTime;
 
     private String LatestChapter;

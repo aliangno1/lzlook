@@ -6,7 +6,7 @@ import com.lzlook.backend.bean.SearchResult;
 import com.lzlook.backend.service.NovelCrawlerService;
 import org.springframework.stereotype.Service;
 
-@Service("biquge")
+@Service("www.biquge.info")
 public class BiqugeCrawlerServiceImpl implements NovelCrawlerService {
 
     private final static String searchUrl = "";
@@ -25,7 +25,6 @@ public class BiqugeCrawlerServiceImpl implements NovelCrawlerService {
     public Chapter chapter(String url) {
         return parseChapter(url);
     }
-
 
     private SearchResult parseSearchResult(String keyword) {
         return null;

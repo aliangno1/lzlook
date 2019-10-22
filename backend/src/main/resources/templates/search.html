@@ -13,12 +13,18 @@
         <div>
             <ul>
                 <li th:each="result:${results}">
-                    <div>
+                    <div th:if="${result.parsed}">
                         <a th:href="'/novel/novel?url='+${result.url}" th:text="${result.title}"></a>
+                    </div>
+                    <div th:unless="${result.parsed}">
+                        <a th:href="@{${result.url}}" th:text="${result.title}"></a>
                     </div>
                     <div>
                         <label th:text="${result.source}"></label>
-                        <a th:href="${result.source}">查看原网址</a>
+                        <a th:href="${result.url}">查看原网址</a>
+                    </div>
+                    <div th:if="${result.parsed}">
+                        推荐源
                     </div>
                 </li>
             </ul>

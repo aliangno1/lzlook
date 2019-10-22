@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Service("dingdian")
+@Service("www.x23us.com")
 public class DingdianCrawlerServiceImpl implements NovelCrawlerService {
 
     private final static String searchUrl = "https://www.x23us.com/modules/article/search.php?searchkey=";
@@ -41,7 +41,6 @@ public class DingdianCrawlerServiceImpl implements NovelCrawlerService {
     public Chapter chapter(String url) {
         return parseChapter(url);
     }
-
 
     private SearchResult parseSearchResult(String keyword, SearchType type) {
         String encodedKeyword;

@@ -6,6 +6,7 @@ import com.lzlook.backend.bean.Novel;
 import com.lzlook.backend.bean.SearchResult;
 import com.lzlook.backend.dto.response.EntityResponse;
 import com.lzlook.backend.dto.response.ListResponse;
+import com.lzlook.backend.service.FetchEngineService;
 import com.lzlook.backend.service.NovelServiceLocator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,10 +25,13 @@ public class LzlookController {
     @Autowired
     private NovelServiceLocator novelServiceLocator;
 
+    @Autowired
+    private FetchEngineService fetchEngineService;
+
     @RequestMapping("/search")
     public String search(@RequestParam String keyword, Model model) {
         ListResponse<SearchResult> response = new ListResponse<>();
-        List<SearchResult> list = novelServiceLocator.search(keyword);
+        List<SearchResult> list = fetchEngineService.search(keyword);
         System.out.println(JSON.toJSONString(list));
         response.success(list);
         model.addAttribute("results", list);
