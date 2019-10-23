@@ -116,10 +116,12 @@ public class Dingdian1CrawlerServiceImpl implements NovelCrawlerService {
             chapter.setUrl(url);
             chapter.setName(doc.select("#wrapper > div.content_read > div > div.bookname > h1").get(0).html());
             chapter.setContent(doc.select("#content").html().replaceAll("\n", ""));
-            // todo :首章获取不到前一章
-            chapter.setPrevious(baseUri + doc.select("#wrapper > div.content_read > div > div.bookname > div.bottem1 > a:nth-child(2)").get(0).attr("href"));
-            // todo :最新章获取不到后一章
-            chapter.setNext(baseUri + doc.select("#wrapper > div.content_read > div > div.bookname > div.bottem1 > a:nth-child(4)").get(0).attr("href"));
+            String previousUrl = doc.select("#wrapper > div.content_read > div > div.bookname > div.bottem1 > a:nth-child(2)").get(0).attr("href");
+            String nextUrl = doc.select("#wrapper > div.content_read > div > div.bookname > div.bottem1 > a:nth-child(4)").get(0).attr("href");
+            previousUrl = previousUrl.endsWith(".html") ? baseUri + previousUrl : url;
+            nextUrl = nextUrl.endsWith(".html") ? baseUri + nextUrl : url;
+            chapter.setPrevious(previousUrl);
+            chapter.setNext(nextUrl);
         } catch (IOException e) {
             System.out.println("Jsoup解析出错--dingdianCrawlerService");
             e.printStackTrace();
