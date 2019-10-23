@@ -31,7 +31,7 @@ public class LzlookController {
     @RequestMapping("/search")
     public String search(@RequestParam String keyword, Model model) {
         ListResponse<SearchResult> response = new ListResponse<>();
-        List<SearchResult> list = fetchEngineService.search(keyword);
+        List<SearchResult> list = novelServiceLocator.search(keyword);
         System.out.println(JSON.toJSONString(list));
         response.success(list);
         model.addAttribute("results", list);

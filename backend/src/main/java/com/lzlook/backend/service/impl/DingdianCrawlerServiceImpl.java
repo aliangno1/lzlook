@@ -9,6 +9,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-//@Service("www.x23us.com")
+@Service("www.x23us.com")
 public class DingdianCrawlerServiceImpl implements NovelCrawlerService {
 
     private final static String searchUrl = "https://www.x23us.com/modules/article/search.php?searchkey=";
@@ -54,7 +55,6 @@ public class DingdianCrawlerServiceImpl implements NovelCrawlerService {
                 doc = Jsoup.connect(searchUrl + encodedKeyword).get();
             }
             if (doc != null) {
-                // todo:搜索结果为列表的情况需要处理
                 Elements reads = doc.select(".read");
                 Element read = reads.size() < 1 ? null : reads.get(0);
                 if (read != null) {

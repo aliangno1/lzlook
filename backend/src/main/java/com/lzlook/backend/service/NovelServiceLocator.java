@@ -8,6 +8,7 @@ import org.jsoup.nodes.Document;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.net.MalformedURLException;
@@ -21,9 +22,12 @@ public class NovelServiceLocator implements ApplicationContextAware {
 
     private Map<String, NovelCrawlerService> novelCrawlerServiceMap;
 
+    private Map<String, FetchEngineService> fetchEngineServiceMap;
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         novelCrawlerServiceMap = applicationContext.getBeansOfType(NovelCrawlerService.class);
+        fetchEngineServiceMap = applicationContext.getBeansOfType(FetchEngineService.class);
     }
 
     public SearchResult parseResultInfo(String url) {
@@ -47,14 +51,22 @@ public class NovelServiceLocator implements ApplicationContextAware {
     }
 
     public List<SearchResult> search(String keyword) {
-        List<SearchResult> results = new ArrayList<>();
+        List<SearchResult> list = new ArrayList<>();
         for (NovelCrawlerService novelCrawler : novelCrawlerServiceMap.values()) {
             SearchResult result = novelCrawler.search(keyword);
             if (result != null) {
-                results.add(result);
+                list.add(result);
             }
         }
-        return results;
+
+        for (FetchEngineService fetchEngine : fetchEngineServiceMap.values()) {
+            List<SearchResult> results = fetchEngine.search(keyword);
+            if (!results.isEmpty()) {
+                list.addAll(results);
+            }
+        }
+        // todo:同一小说源去重，推荐源放前
+        return list;
     }
 
     public Novel novel(String url) {
