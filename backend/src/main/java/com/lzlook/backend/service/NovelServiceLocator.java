@@ -3,12 +3,9 @@ package com.lzlook.backend.service;
 import com.lzlook.backend.bean.Chapter;
 import com.lzlook.backend.bean.Novel;
 import com.lzlook.backend.bean.SearchResult;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.net.MalformedURLException;
@@ -16,6 +13,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 @Component
 public class NovelServiceLocator implements ApplicationContextAware {
@@ -26,46 +27,52 @@ public class NovelServiceLocator implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        int availProcessors = Runtime.getRuntime().availableProcessors();
+        System.out.println("avail processors count: " + availProcessors);
         novelCrawlerServiceMap = applicationContext.getBeansOfType(NovelCrawlerService.class);
         fetchEngineServiceMap = applicationContext.getBeansOfType(FetchEngineService.class);
     }
 
-    public SearchResult parseResultInfo(String url) {
-        Document doc;
-        SearchResult result;
-        try {
-            doc = Jsoup.connect(url).get();
-            String location = doc.location();
-            String source = new URL(location).getHost();
-            result = new SearchResult();
-            result.setTitle(doc.title());
-            result.setSource(source);
-            result.setUrl(location);
-            if (novelCrawlerServiceMap.containsKey(source)) {
-                result.setParsed(true);
-            }
-        } catch (Exception e) {
-            return null;
-        }
-        return result;
+    public Map<String, NovelCrawlerService> getNovelCrawlerServiceMap() {
+        return this.novelCrawlerServiceMap;
     }
 
     public List<SearchResult> search(String keyword) {
         List<SearchResult> list = new ArrayList<>();
+        List<Future<SearchResult>> resultFutureList = new ArrayList<>();
         for (NovelCrawlerService novelCrawler : novelCrawlerServiceMap.values()) {
-            SearchResult result = novelCrawler.search(keyword);
-            if (result != null) {
-                list.add(result);
+            Future<SearchResult> resultFuture = novelCrawler.search(keyword);
+            resultFutureList.add(resultFuture);
+        }
+
+        List<Future<List<SearchResult>>> resultsFutureList = new ArrayList<>();
+        for (FetchEngineService fetchEngine : fetchEngineServiceMap.values()) {
+            Future<List<SearchResult>> resultsFuture = fetchEngine.search(keyword);
+            resultsFutureList.add(resultsFuture);
+        }
+
+        for (Future<SearchResult> resultFeature : resultFutureList) {
+            try {
+                SearchResult result = resultFeature.get(5, TimeUnit.SECONDS);
+                if (result != null) {
+                    list.add(result);
+                }
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                e.printStackTrace();
             }
         }
 
-        for (FetchEngineService fetchEngine : fetchEngineServiceMap.values()) {
-            List<SearchResult> results = fetchEngine.search(keyword);
-            if (!results.isEmpty()) {
-                list.addAll(results);
+        for (Future<List<SearchResult>> resultsFeature : resultsFutureList) {
+            try {
+                List<SearchResult> results = resultsFeature.get(5, TimeUnit.SECONDS);
+                if (!results.isEmpty()) {
+                    list.addAll(results);
+                }
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                e.printStackTrace();
             }
         }
-        // todo:同一小说源去重，推荐源放前
+        // todo:同一小说源去重，推荐源 放前面
         return list;
     }
 

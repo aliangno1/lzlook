@@ -9,14 +9,14 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
 
 @Service("www.23wx.cc")
 public class Dingdian1CrawlerServiceImpl implements NovelCrawlerService {
@@ -24,8 +24,9 @@ public class Dingdian1CrawlerServiceImpl implements NovelCrawlerService {
     private final static String baseUri = "https://www.23wx.cc";
 
     @Override
-    public SearchResult search(String keyword) {
-        return parseSearchResult(keyword, SearchType.KEYWORD);
+    @Async
+    public Future<SearchResult> search(String keyword) {
+        return new AsyncResult<>(parseSearchResult(keyword, SearchType.KEYWORD));
     }
 
     @Override

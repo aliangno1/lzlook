@@ -13,8 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -25,13 +23,13 @@ public class LzlookController {
     @Autowired
     private NovelServiceLocator novelServiceLocator;
 
-    @Autowired
-    private FetchEngineService fetchEngineService;
-
     @RequestMapping("/search")
     public String search(@RequestParam String keyword, Model model) {
         ListResponse<SearchResult> response = new ListResponse<>();
+        Long start = System.currentTimeMillis();
         List<SearchResult> list = novelServiceLocator.search(keyword);
+        Long end = System.currentTimeMillis();
+        System.out.println("search cost time:" + (end - start) + "ms");
         System.out.println(JSON.toJSONString(list));
         response.success(list);
         model.addAttribute("results", list);
