@@ -23,12 +23,14 @@ public class AsyncTaskConfig implements AsyncConfigurer {
     @Bean
     public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor threadPool = new ThreadPoolTaskExecutor();
+        int availProcessors = Runtime.getRuntime().availableProcessors();
+        System.out.println("avail processors count: " + availProcessors);
         //设置核心线程数
         threadPool.setCorePoolSize(10);
         //设置最大线程数
         threadPool.setMaxPoolSize(20);
         //线程池所使用的缓冲队列
-        threadPool.setQueueCapacity(10);
+        threadPool.setQueueCapacity(20);
         //等待任务在关机时完成--表明等待所有线程执行完
         threadPool.setWaitForTasksToCompleteOnShutdown(true);
         // 等待时间 （默认为0，此时立即停止），并没等待xx秒后强制停止

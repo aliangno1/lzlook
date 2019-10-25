@@ -18,7 +18,7 @@
                     <tbody>
                     <tr th:each="chapter: ${novel.chapters}">
                         <td>
-                            <a th:text="${chapter.name}" th:href="'/novel/chapter?url='+${chapter.url}"></a>
+                            <a th:text="${chapter.name}" th:href="@{'/novel/chapter?url='+${chapter.url}}"></a>
                         </td>
                     </tr>
                     </tbody>

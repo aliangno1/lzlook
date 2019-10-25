@@ -68,7 +68,7 @@ public class BaiduCrawlerServiceImpl implements FetchEngineService {
         }
         for (Future<SearchResult> resultFuture : futureList) {
             try {
-                SearchResult result = resultFuture.get(5, TimeUnit.SECONDS);
+                SearchResult result = resultFuture.get(10,TimeUnit.SECONDS);
                 if (result != null) {
                     list.add(result);
                 }

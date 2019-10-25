@@ -17,10 +17,10 @@
         <div class="card-footer">
             <div class="row justify-content-around align-content-center" style="margin-top: 40px">
                 <div class="col text-center">
-                    <a th:href="'/novel/chapter?url='+${chapter.previous}">上一章</a>
+                    <a th:href="@{'/novel/chapter?url='+${chapter.previous}}">上一章</a>
                 </div>
                 <div class="col text-center">
-                    <a th:href="'/novel/chapter?url='+${chapter.next}">下一章</a>
+                    <a th:href="@{'/novel/chapter?url='+${chapter.next}}">下一章</a>
                 </div>
             </div>
         </div>

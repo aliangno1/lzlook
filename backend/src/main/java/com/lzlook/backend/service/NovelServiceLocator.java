@@ -27,8 +27,6 @@ public class NovelServiceLocator implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        int availProcessors = Runtime.getRuntime().availableProcessors();
-        System.out.println("avail processors count: " + availProcessors);
         novelCrawlerServiceMap = applicationContext.getBeansOfType(NovelCrawlerService.class);
         fetchEngineServiceMap = applicationContext.getBeansOfType(FetchEngineService.class);
     }
@@ -53,7 +51,7 @@ public class NovelServiceLocator implements ApplicationContextAware {
 
         for (Future<SearchResult> resultFeature : resultFutureList) {
             try {
-                SearchResult result = resultFeature.get(5, TimeUnit.SECONDS);
+                SearchResult result = resultFeature.get(10,TimeUnit.SECONDS);
                 if (result != null) {
                     list.add(result);
                 }
@@ -64,7 +62,7 @@ public class NovelServiceLocator implements ApplicationContextAware {
 
         for (Future<List<SearchResult>> resultsFeature : resultsFutureList) {
             try {
-                List<SearchResult> results = resultsFeature.get(5, TimeUnit.SECONDS);
+                List<SearchResult> results = resultsFeature.get(10,TimeUnit.SECONDS);
                 if (!results.isEmpty()) {
                     list.addAll(results);
                 }
