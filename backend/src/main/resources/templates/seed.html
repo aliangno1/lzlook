@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>lzlook-seed</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        body {
+            width: 100%;
+        }
+
+        .header {
+            margin-top: 300px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row header">
+        <div class="col text-center">
+            <h1>Welcome to lzlook-seed</h1>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-xl-5 col-lg-7 col-md-9 col-sm-12 text-center">
+            <form action="#" th:action="@{/seed/search}" method="get">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="id" placeholder="请输入种质ID编号"
+                           style="margin: 30px auto"/>
+                    <button type="submit" class="btn btn-dark">Lz Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+</html>

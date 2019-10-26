@@ -26,15 +26,15 @@ public class AsyncTaskConfig implements AsyncConfigurer {
         int availProcessors = Runtime.getRuntime().availableProcessors();
         System.out.println("avail processors count: " + availProcessors);
         //设置核心线程数
-        threadPool.setCorePoolSize(10);
+        threadPool.setCorePoolSize(5);
         //设置最大线程数
-        threadPool.setMaxPoolSize(20);
+        threadPool.setMaxPoolSize(15);
         //线程池所使用的缓冲队列
-        threadPool.setQueueCapacity(20);
+        threadPool.setQueueCapacity(500);
         //等待任务在关机时完成--表明等待所有线程执行完
         threadPool.setWaitForTasksToCompleteOnShutdown(true);
         // 等待时间 （默认为0，此时立即停止），并没等待xx秒后强制停止
-        threadPool.setAwaitTerminationSeconds(60);
+        threadPool.setAwaitTerminationSeconds(6000);
         //  线程名称前缀
         threadPool.setThreadNamePrefix("crawler-Async-");
         // 初始化线程
