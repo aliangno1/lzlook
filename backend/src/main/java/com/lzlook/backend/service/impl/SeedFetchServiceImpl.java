@@ -32,14 +32,14 @@ public class SeedFetchServiceImpl implements SeedFetchService {
 
     @Override
     public String getItemInfo(String id) {
-        headers.add("Cookie", "acw_tc=7b39758715720536210983761efd4f8d204476139dbf770161e3e6235c7083; ASPSESSIONIDASSRSQAS=AGHNHGLBDMGCFJBENLBHDOAO; PHPSESSID=5eab48d6d6baaa9e94fcf96e442a5f66; UM_distinctid=16e05b37f71340-08f21b4376bb28-5373e62-1fa400-16e05b37f72a75; CNZZDATA1259170489=1812938470-1572053460-http%253A%252F%252Fwww.cgris.net%252F%7C1572080567");
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("action", "item");
-        map.add("p", id);
-        map.add("croptype", "[\"粮食作物\", \"小麦\"]");
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
-        return FontUtil.decodeUnicode(Objects.requireNonNull(response.getBody()));
+        String itemInfo;
+        try {
+            itemInfo = seedSearchUtil.getItemInfo(id, "粮食作物", "小麦").get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return itemInfo;
     }
 
     @Autowired
@@ -50,7 +50,7 @@ public class SeedFetchServiceImpl implements SeedFetchService {
     }
 
     @Override
-    public void exportData() {
+    public void exportData(String key1, String key2) {
         Long start = System.currentTimeMillis();
         List<String> itemIdList;
         Scanner in = null;
@@ -78,7 +78,7 @@ public class SeedFetchServiceImpl implements SeedFetchService {
         Map<String, Future<String>> futureMap = new HashMap<>();
 //        List<Future<String>> futureList = new ArrayList<>();
         for (String id : itemIdList) {
-            Future<String> itemFuture = seedSearchUtil.getItemInfo(id);
+            Future<String> itemFuture = seedSearchUtil.getItemInfo(id, key1, key2);
             futureMap.put(id, itemFuture);
 //            futureList.add(itemFuture);
         }

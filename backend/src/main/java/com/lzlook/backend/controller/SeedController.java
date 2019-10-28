@@ -37,7 +37,7 @@ public class SeedController {
 
     @RequestMapping("/export")
     @ResponseBody
-    public void export( Model model) {
-        seedFetchService.exportData();
+    public void export(@RequestParam String key1, @RequestParam String key2, Model model) {
+        seedFetchService.exportData(key1,key2);
     }
 }
