@@ -75,19 +75,25 @@ public class SeedFetchServiceImpl implements SeedFetchService {
             return;
         }
 
-        List<Future<String>> futureList = new ArrayList<>();
+        Map<String, Future<String>> futureMap = new HashMap<>();
+//        List<Future<String>> futureList = new ArrayList<>();
         for (String id : itemIdList) {
             Future<String> itemFuture = seedSearchUtil.getItemInfo(id);
-            futureList.add(itemFuture);
+            futureMap.put(id, itemFuture);
+//            futureList.add(itemFuture);
         }
         println("开始数据爬取...");
 
         List<String> itemList = new ArrayList<>();
-        for (Future<String> itemFuture : futureList) {
+        List<String> failedIdList = new ArrayList<>();
+        for (Map.Entry<String, Future<String>> itemFutureEntry : futureMap.entrySet()) {
             try {
+                String id = itemFutureEntry.getKey();
+                Future<String> itemFuture = itemFutureEntry.getValue();
                 String item = itemFuture.get();
-                if("[]".equals(item)){
-                    println("一个种质信息获取失败！");
+                if ("[]".equals(item)) {
+                    println("ID为 " + id + " 的种质信息获取为空！");
+                    failedIdList.add(id);
                     continue;
                 }
                 itemList.add(item);
@@ -109,6 +115,7 @@ public class SeedFetchServiceImpl implements SeedFetchService {
         println("数据导出完成。");
         Long end = System.currentTimeMillis();
         println("本次获取种质信息：成功" + itemList.size() + "条，失败" + (itemIdList.size() - itemList.size()) + "条。共耗时：" + (end - start) + "毫秒。");
+        println("种质信息获取为空的id列表为： " + JSON.toJSONString(failedIdList));
 //        println("亲，觉得满意的话，给个好评哈~ 期待您的下次使用。");
     }
 
