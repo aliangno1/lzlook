@@ -36,8 +36,7 @@ public class SeedFetchServiceImpl implements SeedFetchService {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("action", "item");
         map.add("p", id);
-//        map.add("p", "01-00005");
-
+        map.add("croptype", "[\"粮食作物\", \"小麦\"]");
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
         return FontUtil.decodeUnicode(Objects.requireNonNull(response.getBody()));
@@ -87,6 +86,10 @@ public class SeedFetchServiceImpl implements SeedFetchService {
         for (Future<String> itemFuture : futureList) {
             try {
                 String item = itemFuture.get();
+                if("[]".equals(item)){
+                    println("一个种质信息获取失败！");
+                    continue;
+                }
                 itemList.add(item);
             } catch (InterruptedException | ExecutionException e) {
                 println("异步获取数据出错！");
@@ -106,7 +109,7 @@ public class SeedFetchServiceImpl implements SeedFetchService {
         println("数据导出完成。");
         Long end = System.currentTimeMillis();
         println("本次获取种质信息：成功" + itemList.size() + "条，失败" + (itemIdList.size() - itemList.size()) + "条。共耗时：" + (end - start) + "毫秒。");
-        println("亲，觉得满意的话，给个好评哈~ 期待您的下次使用。");
+//        println("亲，觉得满意的话，给个好评哈~ 期待您的下次使用。");
     }
 
 }

@@ -32,6 +32,7 @@ public class SeedSearchUtil {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("action", "item");
         map.add("p", id);
+        map.add("croptype", "[\"粮食作物\", \"小麦\"]");
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
         return new AsyncResult<>(FontUtil.decodeUnicode(Objects.requireNonNull(response.getBody())));
