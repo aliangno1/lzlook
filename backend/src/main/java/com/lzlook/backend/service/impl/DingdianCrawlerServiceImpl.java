@@ -20,8 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
-
-@Service("www.x23us.com")
+//@Service("www.x23us.com")
 public class DingdianCrawlerServiceImpl implements NovelCrawlerService {
 
     private final static String searchUrl = "https://www.x23us.com/modules/article/search.php?searchkey=";
@@ -33,10 +32,7 @@ public class DingdianCrawlerServiceImpl implements NovelCrawlerService {
     @Override
     @Async
     public Future<SearchResult> search(String keyword) {
-//        Long start = System.currentTimeMillis();
         SearchResult result = parseSearchResult(keyword, SearchType.KEYWORD);
-//        Long end = System.currentTimeMillis();
-//        System.out.println(source + " cost time: " + (end - start));
         return new AsyncResult<>(result);
     }
 

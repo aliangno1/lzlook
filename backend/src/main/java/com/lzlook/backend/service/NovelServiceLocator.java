@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -45,32 +46,30 @@ public class NovelServiceLocator implements ApplicationContextAware {
 
     public List<SearchResult> search(String keyword) {
         List<SearchResult> list = new ArrayList<>();
+        // 先从缓存中获取
         Object redisValue = valueOperations.get(String.valueOf(keyword.hashCode()));
         if (redisValue != null) {
             list = JSON.parseArray(FontUtil.decodeUnicode(String.valueOf(redisValue)), SearchResult.class);
             return list;
         }
-        List<Future<SearchResult>> resultFutureList = new ArrayList<>();
-        for (NovelCrawlerService novelCrawler : novelCrawlerServiceMap.values()) {
-            Future<SearchResult> resultFuture = novelCrawler.search(keyword);
-            resultFutureList.add(resultFuture);
-        }
+        // 小说网站站内搜索
+        list.addAll(searchFromNovelSite(keyword));
+        // 搜索引擎搜索
+        list.addAll(searchFromEngine(keyword));
+
+        // todo:同一小说源去重，推荐源 放前面
+        // 将每次查询结果放入缓存，过期时间设置为10分钟
+        valueOperations.set(String.valueOf(keyword.hashCode()), FontUtil.chinaToUnicode(JSON.toJSONString(list)), 10 * 60 * 1000, TimeUnit.MILLISECONDS);
+        return list;
+    }
+
+    private Collection<? extends SearchResult> searchFromEngine(String keyword) {
+        List<SearchResult> list = new ArrayList<>();
 
         List<Future<List<SearchResult>>> resultsFutureList = new ArrayList<>();
         for (FetchEngineService fetchEngine : fetchEngineServiceMap.values()) {
             Future<List<SearchResult>> resultsFuture = fetchEngine.search(keyword);
             resultsFutureList.add(resultsFuture);
-        }
-
-        for (Future<SearchResult> resultFeature : resultFutureList) {
-            try {
-                SearchResult result = resultFeature.get(10, TimeUnit.SECONDS);
-                if (result != null) {
-                    list.add(result);
-                }
-            } catch (InterruptedException | ExecutionException | TimeoutException e) {
-                e.printStackTrace();
-            }
         }
 
         for (Future<List<SearchResult>> resultsFeature : resultsFutureList) {
@@ -83,8 +82,28 @@ public class NovelServiceLocator implements ApplicationContextAware {
                 e.printStackTrace();
             }
         }
-        // todo:同一小说源去重，推荐源 放前面
-        valueOperations.set(String.valueOf(keyword.hashCode()), FontUtil.chinaToUnicode(JSON.toJSONString(list)), 10 * 60 * 1000, TimeUnit.MILLISECONDS);
+        return list;
+    }
+
+    private Collection<? extends SearchResult> searchFromNovelSite(String keyword) {
+        List<SearchResult> list = new ArrayList<>();
+
+        List<Future<SearchResult>> resultFutureList = new ArrayList<>();
+        for (NovelCrawlerService novelCrawler : novelCrawlerServiceMap.values()) {
+            Future<SearchResult> resultFuture = novelCrawler.search(keyword);
+            resultFutureList.add(resultFuture);
+        }
+
+        for (Future<SearchResult> resultFeature : resultFutureList) {
+            try {
+                SearchResult result = resultFeature.get(10, TimeUnit.SECONDS);
+                if (result != null) {
+                    list.add(result);
+                }
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                e.printStackTrace();
+            }
+        }
         return list;
     }
 
