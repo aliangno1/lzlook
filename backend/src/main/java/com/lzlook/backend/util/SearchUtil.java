@@ -37,6 +37,8 @@ public class SearchUtil {
             result.setUrl(location);
             if (novelServiceLocator.getNovelCrawlerServiceMap().containsKey(source)) {
                 result.setParsed(true);
+            } else {
+                result.setParsed(false);
             }
         } catch (Exception e) {
             return null;

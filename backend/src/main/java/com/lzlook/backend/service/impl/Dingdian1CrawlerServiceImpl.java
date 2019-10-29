@@ -57,7 +57,7 @@ public class Dingdian1CrawlerServiceImpl implements NovelCrawlerService {
                 doc = Jsoup.connect(searchUrl + encodedKeyword).get();
             }
             if (doc != null) {
-                Elements infos = doc.select("#info h1");
+                Elements infos = doc.select("#info > h1");
                 Element info = infos.size() < 1 ? null : infos.get(0);
                 if (info != null) {
                     result = new SearchResult();

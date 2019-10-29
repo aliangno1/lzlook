@@ -15,10 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -57,10 +54,29 @@ public class NovelServiceLocator implements ApplicationContextAware {
         // 搜索引擎搜索
         list.addAll(searchFromEngine(keyword));
 
-        // todo:同一小说源去重，推荐源 放前面
+        // 对同一小说源去重
+        List<SearchResult> results = new ArrayList<>();
+        list.forEach(result -> {
+            if (results.stream().noneMatch(r -> r.getSource().equals(result.getSource()))) {
+                results.add(result);
+            } else {
+                System.out.println("去重：" + result.getSource() + "  " + JSON.toJSON(result));
+            }
+        });
+
+        // 已解析网站靠前
+        results.sort((o1, o2) -> {
+            if(o1.getParsed() && o2.getParsed()){
+                return 0;
+            }else if (o1.getParsed()){
+                return -1;
+            }else {
+                return 1;
+            }
+        });
         // 将每次查询结果放入缓存，过期时间设置为10分钟
         valueOperations.set(String.valueOf(keyword.hashCode()), FontUtil.chinaToUnicode(JSON.toJSONString(list)), 10 * 60 * 1000, TimeUnit.MILLISECONDS);
-        return list;
+        return results;
     }
 
     private Collection<? extends SearchResult> searchFromEngine(String keyword) {
@@ -96,7 +112,7 @@ public class NovelServiceLocator implements ApplicationContextAware {
 
         for (Future<SearchResult> resultFeature : resultFutureList) {
             try {
-                SearchResult result = resultFeature.get(10, TimeUnit.SECONDS);
+                SearchResult result = resultFeature.get(3, TimeUnit.SECONDS);
                 if (result != null) {
                     list.add(result);
                 }
