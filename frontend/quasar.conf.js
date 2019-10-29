@@ -47,7 +47,16 @@ module.exports = function (ctx) {
       directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: [
+        'LoadingBar'
+      ],
+      config: {
+        loadingBar: {
+          color: 'purple',
+          size: '5px',
+          position: 'top'
+        }
+      }
     },
 
     // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie
@@ -80,8 +89,17 @@ module.exports = function (ctx) {
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
     devServer: {
       // https: true,
-      // port: 8080,
-      open: true // opens browser window automatically
+      port: 80
+      // open: true, // opens browser window automatically
+      // proxy: {
+      //   '/api': {
+      //     target: 'http://localhost:8081',
+      //     // changeOrigin: true,
+      //     pathRewrite: {
+      //       '^/api': 'lzlook'
+      //     }
+      //   }
+      // }
     },
 
     // animations: 'all', // --- includes all animations
