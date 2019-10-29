@@ -126,8 +126,8 @@ public class BiqugeCrawlerServiceImpl implements NovelCrawlerService {
             chapter.setContent(doc.select("#content").html().replaceAll("\n", ""));
             String previousUrl = doc.select("#wrapper > div.content_read > div > div.bookname > div.bottem1 > a:nth-child(2)").get(0).attr("href");
             String nextUrl = doc.select("#wrapper > div.content_read > div > div.bookname > div.bottem1 > a:nth-child(4)").get(0).attr("href");
-            previousUrl = previousUrl.endsWith(".html") ? searchUrl + previousUrl : url;
-            nextUrl = nextUrl.endsWith(".html") ? searchUrl + nextUrl : url;
+            previousUrl = previousUrl.endsWith(".html") ? sourceUrl + previousUrl : url;
+            nextUrl = nextUrl.endsWith(".html") ? sourceUrl + nextUrl : url;
             chapter.setPrevious(previousUrl);
             chapter.setNext(nextUrl);
         } catch (IOException e) {
