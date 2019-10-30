@@ -9,17 +9,17 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
-import java.util.concurrent.ExecutionException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 @Component
 public class NovelServiceLocator implements ApplicationContextAware {
@@ -57,7 +57,9 @@ public class NovelServiceLocator implements ApplicationContextAware {
         // 对同一小说源去重
         List<SearchResult> results = new ArrayList<>();
         list.forEach(result -> {
-            if (results.stream().noneMatch(r -> r.getSource().equals(result.getSource()))) {
+            if (results.stream().noneMatch(r ->
+                    r.getSource().equals(result.getSource())
+            )) {
                 results.add(result);
             } else {
                 System.out.println("去重：" + result.getSource() + "  " + JSON.toJSON(result));
@@ -66,11 +68,11 @@ public class NovelServiceLocator implements ApplicationContextAware {
 
         // 已解析网站靠前
         results.sort((o1, o2) -> {
-            if(o1.getParsed() && o2.getParsed()){
+            if (o1.getParsed() && o2.getParsed()) {
                 return 0;
-            }else if (o1.getParsed()){
+            } else if (o1.getParsed()) {
                 return -1;
-            }else {
+            } else {
                 return 1;
             }
         });
@@ -90,11 +92,11 @@ public class NovelServiceLocator implements ApplicationContextAware {
 
         for (Future<List<SearchResult>> resultsFeature : resultsFutureList) {
             try {
-                List<SearchResult> results = resultsFeature.get(10, TimeUnit.SECONDS);
+                List<SearchResult> results = resultsFeature.get(5, TimeUnit.SECONDS);
                 if (!results.isEmpty()) {
                     list.addAll(results);
                 }
-            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -116,7 +118,7 @@ public class NovelServiceLocator implements ApplicationContextAware {
                 if (result != null) {
                     list.add(result);
                 }
-            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

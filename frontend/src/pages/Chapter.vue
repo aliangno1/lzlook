@@ -7,7 +7,7 @@
             {{ chapter.name }}
           </div>
         </div>
-        <div v-html="chapter.content" class="q-mx-md"></div>
+        <div id="content" v-html="chapter.content" class="q-mx-md text-subtitle1"></div>
         <div class="row q-mt-md">
           <div class="col text-center">
             <q-btn @click="toChapter(chapter.previous)" label="上一章"></q-btn>
@@ -36,6 +36,11 @@ export default {
       await this.$store.dispatch('lzlook/chapter', { url })
       window.scroll(0, 0)
     }
+  },
+  created () {
+    this.$store.commit('lzlook/update', { showSearchHeader: true })
   }
 }
 </script>
+<style scoped>
+</style>

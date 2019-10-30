@@ -13,10 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 @Service("baidu")
 public class BaiduCrawlerServiceImpl implements FetchEngineService {
@@ -54,8 +52,9 @@ public class BaiduCrawlerServiceImpl implements FetchEngineService {
                         if (nodes.size() > 0) {
                             Element node = nodes.get(0);
                             String title = node.html();
-                            if (title.contains("最新章节")) {
+                            if (title.contains("章节")) {
                                 String jumpUrl = node.attr("href");
+                                System.out.println(jumpUrl);
                                 Future<SearchResult> result = searchUtil.parseResultInfo(jumpUrl);
                                 futureList.add(result);
                             }
@@ -68,11 +67,11 @@ public class BaiduCrawlerServiceImpl implements FetchEngineService {
         }
         for (Future<SearchResult> resultFuture : futureList) {
             try {
-                SearchResult result = resultFuture.get(10,TimeUnit.SECONDS);
+                SearchResult result = resultFuture.get(4,TimeUnit.SECONDS);
                 if (result != null) {
                     list.add(result);
                 }
-            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

@@ -1,29 +1,5 @@
 <template>
   <q-page>
-    <div class="bg-grey-4 q-pt-sm">
-      <q-item>
-        <q-item-section>
-          <q-item-label class="q-pl-sm">
-            <div>
-              <q-form @submit="search(keyword)">
-                <q-input
-                  v-model="keyword"
-                  dense
-                  outlined
-                  standout
-                  bg-color="white"
-                ></q-input>
-              </q-form>
-            </div>
-          </q-item-label>
-        </q-item-section>
-        <q-item-section side>
-          <q-item-label class="q-pl-xl">
-            <q-btn label="登录" color="primary"></q-btn>
-          </q-item-label>
-        </q-item-section>
-      </q-item>
-    </div>
     <div class="q-mt-md q-mx-md" style="white-space:nowrap; overflow:hidden;">
       <div v-for="(item, index) in list" :key="index" class="q-mb-md">
         <a
@@ -52,37 +28,24 @@
 </template>
 
 <script>
+
 import { mapState } from 'vuex'
 export default {
   // name: 'PageName',
-  data () {
-    return {
-    }
-  },
+
   computed: {
-    keyword: {
-      get () {
-        return this.$store.state.lzlook.keyword
-      },
-      set (value) {
-        this.$store.commit('lzlook/update', { keyword: value })
-      }
-    },
     ...mapState('lzlook', [
       'list'
     ])
   },
   methods: {
-    async search (keyword) {
-      if (!keyword) {
-        return
-      }
-      await this.$store.dispatch('lzlook/search')
-    },
     async novel (url) {
       await this.$store.dispatch('lzlook/novel', { url })
       this.$router.push('novel')
     }
+  },
+  created () {
+    this.$store.commit('lzlook/update', { showSearchHeader: true })
   }
 }
 </script>

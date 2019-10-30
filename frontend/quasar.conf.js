@@ -20,7 +20,7 @@ module.exports = function (ctx) {
     extras: [
       // 'ionicons-v4',
       // 'mdi-v4',
-      // 'fontawesome-v5',
+      'fontawesome-v5',
       // 'eva-icons',
       // 'themify',
       // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
@@ -89,17 +89,17 @@ module.exports = function (ctx) {
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
     devServer: {
       // https: true,
-      port: 80
-      // open: true, // opens browser window automatically
-      // proxy: {
-      //   '/api': {
-      //     target: 'http://localhost:8081',
-      //     // changeOrigin: true,
-      //     pathRewrite: {
-      //       '^/api': 'lzlook'
-      //     }
-      //   }
-      // }
+      // port: 8080
+      open: true, // opens browser window automatically
+      proxy: {
+        '/lzlook': {
+          target: 'http://localhost:8081'
+          // changeOrigin: true,
+          // pathRewrite: {
+          //   '^/lzlook': 'lzlook'
+          // }
+        }
+      }
     },
 
     // animations: 'all', // --- includes all animations

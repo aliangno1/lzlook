@@ -25,10 +25,10 @@ public class SearchUtil {
         Document doc;
         SearchResult result;
         try {
-//            Long startTime = System.currentTimeMillis();
-            doc = Jsoup.connect(url).get();
-//            Long endTime = System.currentTimeMillis();
-//            System.out.println(url + " connect cost time:" + (endTime - startTime));
+            Long startTime = System.currentTimeMillis();
+            doc = Jsoup.connect(url).timeout(2000).get();
+            Long endTime = System.currentTimeMillis();
+            System.out.println(url + " connect cost time:" + (endTime - startTime));
             String location = doc.location();
             String source = new URL(location).getHost();
             result = new SearchResult();
@@ -41,6 +41,7 @@ public class SearchUtil {
                 result.setParsed(false);
             }
         } catch (Exception e) {
+            System.out.println(url + " connect timeout.");
             return null;
         }
         return new AsyncResult<>(result);

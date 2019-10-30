@@ -14,8 +14,6 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -126,14 +124,12 @@ public class BiqugeCrawlerServiceImpl implements NovelCrawlerService {
             chapter.setContent(doc.select("#content").html().replaceAll("\n", ""));
             String previousUrl = doc.select("#wrapper > div.content_read > div > div.bookname > div.bottem1 > a:nth-child(2)").get(0).attr("href");
             String nextUrl = doc.select("#wrapper > div.content_read > div > div.bookname > div.bottem1 > a:nth-child(4)").get(0).attr("href");
-            previousUrl = previousUrl.endsWith(".html") ? sourceUrl + previousUrl : url;
-            nextUrl = nextUrl.endsWith(".html") ? sourceUrl + nextUrl : url;
+            previousUrl = previousUrl.endsWith(".html") ? previousUrl : url;
+            nextUrl = nextUrl.endsWith(".html") ?  nextUrl : url;
             chapter.setPrevious(previousUrl);
             chapter.setNext(nextUrl);
-        } catch (IOException e) {
-            System.out.println("Jsoup解析出错--" + source);
-            e.printStackTrace();
         } catch (Exception e) {
+            System.out.println("Jsoup解析出错--" + source);
             e.printStackTrace();
         }
         return chapter;

@@ -7,7 +7,7 @@
             outlined
             dense
             v-model="keyword"
-            placeholder="请输入小说名"
+            placeholder="请输入完整小说名"
           ></q-input>
         </div>
         <div class="col self-center q-mt-md">
@@ -43,6 +43,9 @@ export default {
       await this.$store.dispatch('lzlook/search')
       this.$router.push('results')
     }
+  },
+  created () {
+    this.$store.commit('lzlook/update', { showSearchHeader: false })
   }
 }
 </script>

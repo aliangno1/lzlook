@@ -1,3 +1,4 @@
 export default {
-  keyword: undefined
+  keyword: undefined,
+  showSearchHeader: false
 }

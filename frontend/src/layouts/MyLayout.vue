@@ -1,5 +1,6 @@
 <template>
   <q-layout view="lHr lpr lFr">
+    <header-component></header-component>
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -7,11 +8,13 @@
 </template>
 
 <script>
+import HeaderComponent from '../components/HeaderComponent'
 export default {
   data () {
     return {
     }
   },
+  components: { HeaderComponent },
   created () {
     const listStr = localStorage.getItem('list')
     const novelStr = localStorage.getItem('novel')
