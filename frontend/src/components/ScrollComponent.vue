@@ -1,14 +1,12 @@
 <template>
   <div id="scroll" class="column">
-    <div class="col">
-      <q-btn class="bg-white" @click="up">
-        <i class="fas fa-chevron-up"></i>
+    <div class="col q-mb-xs">
+      <q-btn class="bg-white q-px-sm q-py-xs" @click="up" size="sm" icon="fas fa-chevron-up">
       </q-btn>
       <q-separator></q-separator>
     </div>
     <div class="col">
-      <q-btn class="bg-white" @click="down">
-        <i class="fas fa-chevron-down"></i>
+      <q-btn class="bg-white q-px-sm q-py-xs" @click="down" size="sm" icon="fas fa-chevron-down">
       </q-btn>
     </div>
   </div>
@@ -36,7 +34,7 @@ export default {
 #scroll {
   position: fixed;
   bottom: 10%;
-  right: 3%;
-  width: 45px;
+  right: 2%;
+  width: 35px;
 }
 </style>

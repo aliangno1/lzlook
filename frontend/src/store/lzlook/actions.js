@@ -6,7 +6,7 @@ export async function search ({ commit, state }) {
   LoadingBar.start()
   const { data: { list } } = await api.search({ keyword })
   LoadingBar.stop()
-  localStorage.setItem('list', JSON.stringify(list))
+  sessionStorage.setItem('list', JSON.stringify(list))
   commit('update', { list })
 }
 
@@ -15,7 +15,7 @@ export async function novel ({ commit, state }, payload) {
   LoadingBar.start()
   const { data: { entity } } = await api.novel({ url })
   LoadingBar.stop()
-  localStorage.setItem('novel', JSON.stringify(entity))
+  sessionStorage.setItem('novel', JSON.stringify(entity))
   commit('update', { novel: entity })
 }
 
@@ -24,6 +24,6 @@ export async function chapter ({ commit, state }, payload) {
   LoadingBar.start()
   const { data: { entity } } = await api.chapter({ url })
   LoadingBar.stop()
-  localStorage.setItem('chapter', JSON.stringify(entity))
+  sessionStorage.setItem('chapter', JSON.stringify(entity))
   commit('update', { chapter: entity })
 }

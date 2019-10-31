@@ -1,8 +1,8 @@
 <template>
-  <div class="bg-grey-4 q-pt-sm" v-show="showSearchHeader">
+  <div class="bg-grey-4 q-pt-sm" v-show="isShowSearchHeader">
     <q-item>
       <q-item-section side class="q-pa-none">
-        <q-btn icon="home" flat class="q-px-xs" to="/" color="priamry">
+        <q-btn icon="home" flat class="q-px-xs" to="/" color="black">
           <!-- <i class="fas fa-home"></i> -->
         </q-btn>
       </q-item-section>
@@ -32,7 +32,7 @@ export default {
   },
   computed: {
     ...mapState('lzlook', [
-      'showSearchHeader'
+      'isShowSearchHeader'
     ])
   },
   components: {

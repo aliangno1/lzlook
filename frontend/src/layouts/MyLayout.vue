@@ -4,21 +4,23 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+    <footer-component></footer-component>
   </q-layout>
 </template>
 
 <script>
 import HeaderComponent from '../components/HeaderComponent'
+import FooterComponent from '../components/FooterComponent'
 export default {
   data () {
     return {
     }
   },
-  components: { HeaderComponent },
+  components: { HeaderComponent, FooterComponent },
   created () {
-    const listStr = localStorage.getItem('list')
-    const novelStr = localStorage.getItem('novel')
-    const chapterStr = localStorage.getItem('chapter')
+    const listStr = sessionStorage.getItem('list')
+    const novelStr = sessionStorage.getItem('novel')
+    const chapterStr = sessionStorage.getItem('chapter')
     if (listStr) {
       this.$store.commit('lzlook/update', {
         list: JSON.parse(listStr),
@@ -44,6 +46,6 @@ a:hover {
 }
 a:visited {
   text-decoration: none;
-  color: purple;
+  color: blue;
 }
 </style>

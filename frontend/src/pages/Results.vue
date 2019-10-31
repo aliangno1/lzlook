@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page class="q-mb-xl">
     <div class="q-mt-md q-mx-md" style="white-space:nowrap; overflow:hidden;">
       <div v-for="(item, index) in list" :key="index" class="q-mb-md">
         <a
@@ -41,11 +41,12 @@ export default {
   methods: {
     async novel (url) {
       await this.$store.dispatch('lzlook/novel', { url })
+      this.$store.commit('lzlook/update', { isShowTips: true })
       this.$router.push('novel')
     }
   },
   created () {
-    this.$store.commit('lzlook/update', { showSearchHeader: true })
+    this.$store.commit('lzlook/update', { isShowSearchHeader: true })
   }
 }
 </script>

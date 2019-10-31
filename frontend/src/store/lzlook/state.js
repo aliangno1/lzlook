@@ -1,4 +1,6 @@
 export default {
   keyword: undefined,
-  showSearchHeader: false
+  isShowSearchHeader: false,
+  isShowFooter: true,
+  isShowTips: true
 }
