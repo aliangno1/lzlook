@@ -124,9 +124,8 @@ module.exports = function (ctx) {
         background_color: '#ffffff',
         theme_color: '#027be3',
         icons: [
-
           {
-            'src': 'statics/logos/app-logo.png',
+            'src': 'statics/icons/app-icon.png',
             'sizes': '1240x1382',
             'type': 'image/png'
           }
