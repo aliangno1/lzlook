@@ -19,14 +19,9 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 @Service("www.biquge.info")
-public class BiqugeCrawlerServiceImpl implements NovelCrawlerService {
+public class BiqugeInfoCrawler implements NovelCrawlerService {
 
     private final static String source = "www.biquge.info";
-
-//    private final static String searchUrl = "https://www.biquge.info/modules/article/search.php?searchkey=";
-    private final static String searchUrl = "https://zhannei.baidu.com/cse/search?q=";
-
-    private final static String sourceUrl = "https://www.biquge.info";
 
     @Override
     @Async

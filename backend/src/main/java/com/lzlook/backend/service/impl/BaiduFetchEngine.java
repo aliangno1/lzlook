@@ -17,7 +17,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 @Service("baidu")
-public class BaiduCrawlerServiceImpl implements FetchEngineService {
+public class BaiduFetchEngine implements FetchEngineService {
 
     private final static String searchUrl = "https://www.baidu.com/s?wd=";
 
@@ -26,7 +26,7 @@ public class BaiduCrawlerServiceImpl implements FetchEngineService {
 
     private final SearchUtil searchUtil;
 
-    public BaiduCrawlerServiceImpl(SearchUtil searchUtil) {
+    public BaiduFetchEngine(SearchUtil searchUtil) {
         this.searchUtil = searchUtil;
     }
 
