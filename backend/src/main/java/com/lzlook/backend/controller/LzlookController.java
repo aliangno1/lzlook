@@ -7,6 +7,7 @@ import com.lzlook.backend.bean.SearchResult;
 import com.lzlook.backend.dto.response.EntityResponse;
 import com.lzlook.backend.dto.response.ListResponse;
 import com.lzlook.backend.service.NovelServiceLocator;
+import com.lzlook.backend.service.YuyinService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +21,9 @@ public class LzlookController {
 
     @Autowired
     private NovelServiceLocator novelServiceLocator;
+
+    @Autowired
+    private YuyinService yuyinService;
 
     @RequestMapping("/search")
     public ListResponse<SearchResult> search(@RequestParam String keyword) {
@@ -47,6 +51,11 @@ public class LzlookController {
         Chapter chapter = novelServiceLocator.chapter(url);
         response.success(chapter);
         return response;
+    }
+
+    @RequestMapping("/yuyin")
+    public byte[] yuyin(@RequestParam String text) throws Exception {
+        return yuyinService.getVoice(text);
     }
 
 }
