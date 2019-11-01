@@ -5,26 +5,37 @@ import { storage } from '../../util/storage'
 export async function search ({ commit, state }) {
   const keyword = state.keyword
   LoadingBar.start()
-  const { data: { list } } = await api.search({ keyword })
-  LoadingBar.stop()
-  storage.setItem('list', JSON.stringify(list))
-  commit('update', { list })
+  try {
+    const { data: { list } } = await api.search({ keyword })
+    storage.setItem('list', JSON.stringify(list))
+    commit('update', { list })
+  } finally {
+    LoadingBar.stop()
+  }
 }
 
 export async function novel ({ commit, state }, payload) {
   const { url } = payload
   LoadingBar.start()
-  const { data: { entity } } = await api.novel({ url })
-  LoadingBar.stop()
-  storage.setItem('novel', JSON.stringify(entity))
-  commit('update', { novel: entity })
+  try {
+    const { data: { entity } } = await api.novel({ url })
+    storage.setItem('novel', JSON.stringify(entity))
+    commit('update', { novel: entity })
+  } catch (e) {
+  } finally {
+    LoadingBar.stop()
+  }
 }
 
 export async function chapter ({ commit, state }, payload) {
   const { url } = payload
   LoadingBar.start()
-  const { data: { entity } } = await api.chapter({ url })
-  LoadingBar.stop()
-  storage.setItem('chapter', JSON.stringify(entity))
-  commit('update', { chapter: entity })
+  try {
+    const { data: { entity } } = await api.chapter({ url })
+    storage.setItem('chapter', JSON.stringify(entity))
+    commit('update', { chapter: entity })
+  } catch (e) {
+  } finally {
+    LoadingBar.stop()
+  }
 }
