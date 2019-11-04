@@ -47,7 +47,7 @@ public class NovelServiceLocator implements ApplicationContextAware {
         Object redisValue = valueOperations.get(String.valueOf(keyword.hashCode()));
         if (redisValue != null) {
             list = JSON.parseArray(FontUtil.decodeUnicode(String.valueOf(redisValue)), SearchResult.class);
-            return list;
+            return sort(list);
         }
         // 小说网站站内搜索
         list.addAll(searchFromNovelSite(keyword));
@@ -65,9 +65,14 @@ public class NovelServiceLocator implements ApplicationContextAware {
                 System.out.println("去重：" + result.getSource() + "  " + JSON.toJSON(result));
             }
         });
+        // 将每次查询结果放入缓存，过期时间设置为10分钟
+        valueOperations.set(String.valueOf(keyword.hashCode()), FontUtil.chinaToUnicode(JSON.toJSONString(list)), 10 * 60 * 1000, TimeUnit.MILLISECONDS);
+        return sort(results);
+    }
 
+    private List<SearchResult> sort(List<SearchResult> list) {
         // 已解析网站靠前
-        results.sort((o1, o2) -> {
+        list.sort((o1, o2) -> {
             if (o1.getParsed() && o2.getParsed()) {
                 return 0;
             } else if (o1.getParsed()) {
@@ -76,10 +81,9 @@ public class NovelServiceLocator implements ApplicationContextAware {
                 return 1;
             }
         });
-        // 将每次查询结果放入缓存，过期时间设置为10分钟
-        valueOperations.set(String.valueOf(keyword.hashCode()), FontUtil.chinaToUnicode(JSON.toJSONString(list)), 10 * 60 * 1000, TimeUnit.MILLISECONDS);
-        return results;
+        return list;
     }
+
 
     private Collection<? extends SearchResult> searchFromEngine(String keyword) {
         List<SearchResult> list = new ArrayList<>();
