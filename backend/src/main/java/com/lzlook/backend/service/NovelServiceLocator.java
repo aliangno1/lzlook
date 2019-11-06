@@ -122,8 +122,7 @@ public class NovelServiceLocator implements ApplicationContextAware {
                 if (result != null) {
                     list.add(result);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception ignored) {
             }
         }
         return list;

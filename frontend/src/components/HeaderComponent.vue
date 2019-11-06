@@ -1,14 +1,14 @@
 <template>
-  <div class="bg-grey-4 q-pt-sm" v-show="isShowSearchHeader">
+  <div class="bg-grey-3 q-pt-sm" v-show="isShowSearchHeader">
     <q-item>
       <q-item-section side class="q-pa-none">
-        <q-btn icon="home" flat class="q-px-xs" to="/" color="black">
+        <q-btn icon="img:statics/icons/app-icon.png" flat class="q-px-xs" to="/" color="black">
           <!-- <i class="fas fa-home"></i> -->
         </q-btn>
       </q-item-section>
       <q-item-section class="q-pl-sm">
         <q-item-label>
-          <div>
+          <div style="max-width:200px">
             <search-component></search-component>
           </div>
         </q-item-label>

@@ -14,10 +14,10 @@
           <a :href="item.url">查看源网址</a>
         </div>
         <div class="row">
-          <div class="col text-left">
+          <div class="col-xs-7 col-sm-4 col-md-3 col-lg-2 col-xl-1 text-left">
             <q-badge color="primary " v-if="item.recommend">推荐源</q-badge>
           </div>
-          <div class="col text-right">
+          <div class="col-xs-5 col-sm-4 col-md-2 col-lg-2 col-xl-2 text-right">
             <q-badge color="primary" v-if="item.parsed">已解析</q-badge>
             <q-badge color="red-12" v-else>未解析</q-badge>
           </div>
