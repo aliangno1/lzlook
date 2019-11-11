@@ -23,8 +23,8 @@ public class AsyncTaskConfig implements AsyncConfigurer {
     @Bean
     public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor threadPool = new ThreadPoolTaskExecutor();
-        int availProcessors = Runtime.getRuntime().availableProcessors();
-        System.out.println("avail processors count: " + availProcessors);
+        // int availProcessors = Runtime.getRuntime().availableProcessors();
+        // System.out.println("avail processors count: " + availProcessors);
         //设置核心线程数
         threadPool.setCorePoolSize(10);
         //设置最大线程数
