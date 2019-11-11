@@ -1,6 +1,7 @@
 import api from '../../api/lzlook'
 import { LoadingBar } from 'quasar'
 import { storage } from '../../util/storage'
+import Response from '../../constants/response'
 
 export async function search ({ commit, state }) {
   const keyword = state.keyword
@@ -38,4 +39,14 @@ export async function chapter ({ commit, state }, payload) {
   } finally {
     LoadingBar.stop()
   }
+}
+
+export async function login ({ commit }, payload) {
+  const { name, password } = payload
+  const { data } = await api.login({ name, password })
+  if (data.code === Response.SUCCESS_CODE) {
+    const { entity } = data
+    commit('update', { user: entity, isLogin: true })
+  }
+  return data
 }

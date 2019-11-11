@@ -1,9 +1,11 @@
 import axios from 'axios'
+import qs from 'qs'
 
 const Api = {
   SEARCH: '/lzlook/novel/search',
   NOVEL: '/lzlook/novel/novel',
-  CHAPTER: '/lzlook/novel/chapter'
+  CHAPTER: '/lzlook/novel/chapter',
+  LOGIN: '/lzlook/user/login'
 }
 
 async function get (path, params) {
@@ -31,6 +33,11 @@ export default {
   /**
    * 章节内容查询接口
   */
-  chapter: async (params) => get(Api.CHAPTER, params)
+  chapter: async (params) => get(Api.CHAPTER, params),
 
+  /**
+   * 用户登录接口
+   */
+
+  login: async (params) => axios.post(Api.LOGIN, qs.stringify(params))
 }

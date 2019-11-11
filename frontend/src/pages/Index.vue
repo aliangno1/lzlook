@@ -9,6 +9,17 @@
         alt="Fork me on GitHub"
         data-recalc-dims="1"
     /></a>
+    <div style="position:fixed;right:3%;top:2%">
+      <q-btn
+        label="登录"
+        @click="toLogin"
+        color="primary"
+        v-if="!isLogin"
+      ></q-btn>
+      <q-avatar v-if="isLogin">
+        <img :src="user.avatar" />
+      </q-avatar>
+    </div>
     <q-form
       @submit="search(keyword)"
       style="top:25%; position:fixed;"
@@ -38,7 +49,12 @@
       <div class="column" id="input">
         <div class="col self-center row"></div>
         <div class="col self-center q-mt-md">
-          <q-btn type="submit" label="Lz Search" color="primary" no-caps></q-btn>
+          <q-btn
+            type="submit"
+            label="Lz Search"
+            color="primary"
+            no-caps
+          ></q-btn>
         </div>
       </div>
     </q-form>
@@ -48,6 +64,7 @@
 
 <script>
 import FooterComponent from '../components/FooterComponent'
+import { mapState } from 'vuex'
 export default {
   name: 'PageIndex',
   data () {
@@ -56,6 +73,10 @@ export default {
   },
   components: { FooterComponent },
   computed: {
+    ...mapState('lzlook', [
+      'isLogin',
+      'user'
+    ]),
     keyword: {
       get () {
         return this.$store.state.lzlook.keyword
@@ -64,6 +85,7 @@ export default {
         this.$store.commit('lzlook/update', { keyword: value })
       }
     }
+
   },
   methods: {
     async search (keyword) {
@@ -72,6 +94,9 @@ export default {
       }
       await this.$store.dispatch('lzlook/search')
       this.$router.push('results')
+    },
+    toLogin () {
+      this.$router.push('login')
     }
   },
   created () {
