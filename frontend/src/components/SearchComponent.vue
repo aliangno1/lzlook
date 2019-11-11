@@ -7,7 +7,13 @@
         outlined
         standout
         bg-color="white"
-      ></q-input>
+        type="search"
+        clear-icon="search"
+      >
+        <template v-slot:append>
+          <q-icon name="search" />
+        </template>
+      </q-input>
     </q-form>
   </div>
 </template>

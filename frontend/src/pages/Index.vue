@@ -1,25 +1,32 @@
 <template>
   <q-page class="full-height">
-    <a href="https://github.com/aliangno1/lzlook">
-      <img
-        width="149"
-        height="149"
-        src="https://github.blog/wp-content/uploads/2008/12/forkme_left_orange_ff7600.png?resize=149%2C149"
-        class="attachment-full size-full"
-        alt="Fork me on GitHub"
-        data-recalc-dims="1"
-    /></a>
-    <div style="position:fixed;right:3%;top:2%">
-      <q-btn
-        label="登录"
-        @click="toLogin"
-        color="primary"
-        v-if="!isLogin"
-      ></q-btn>
-      <q-avatar v-if="isLogin">
-        <img :src="user.avatar" />
-      </q-avatar>
+    <div class="row">
+      <div class="col">
+        <a href="https://github.com/aliangno1/lzlook">
+          <img
+            width="149"
+            height="149"
+            src="https://github.blog/wp-content/uploads/2008/12/forkme_left_orange_ff7600.png?resize=149%2C149"
+            class="attachment-full size-full"
+            alt="Fork me on GitHub"
+            data-recalc-dims="1"
+        /></a>
+      </div>
+      <div class="col text-right">
+        <div class="q-mt-sm q-pt-md q-pr-md">
+          <q-btn
+            label="登录"
+            @click="toLogin"
+            color="primary"
+            v-if="!isLogin"
+          ></q-btn>
+          <q-avatar v-if="isLogin" @click="to('/user')">
+            <img :src="user.avatar" />
+          </q-avatar>
+        </div>
+      </div>
     </div>
+
     <q-form
       @submit="search(keyword)"
       style="top:25%; position:fixed;"
@@ -43,7 +50,11 @@
           placeholder="请输入完整小说名"
           class="col-sm-8 col-md-6 col-xs-11"
           style="max-width:600px"
-        ></q-input>
+        >
+          <template v-slot:append>
+            <q-icon name="search" />
+          </template>
+        </q-input>
       </div>
 
       <div class="column" id="input">
@@ -58,12 +69,10 @@
         </div>
       </div>
     </q-form>
-    <footer-component></footer-component>
   </q-page>
 </template>
 
 <script>
-import FooterComponent from '../components/FooterComponent'
 import { mapState } from 'vuex'
 export default {
   name: 'PageIndex',
@@ -71,7 +80,6 @@ export default {
     return {
     }
   },
-  components: { FooterComponent },
   computed: {
     ...mapState('lzlook', [
       'isLogin',
@@ -97,6 +105,9 @@ export default {
     },
     toLogin () {
       this.$router.push('login')
+    },
+    to (path) {
+      this.$router.push(path)
     }
   },
   created () {

@@ -1,5 +1,5 @@
 export default {
-  keyword: undefined,
+  keyword: '',
   isShowSearchHeader: false,
   isShowFooter: true,
   isShowTips: true,
