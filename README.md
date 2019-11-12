@@ -1,4 +1,4 @@
-![](images/lzlook-zhuzhu-pink.png)
+![](images/lzlook-plants.png)
 
 # lzlook 网络小说搜索引擎
 
@@ -15,3 +15,6 @@
 
 
 ![](images/chapter.png)
+
+
+![](images/navigator.png)

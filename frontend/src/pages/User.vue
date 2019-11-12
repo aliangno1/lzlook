@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <div class="q-mt-md">
+    <!-- <div class="q-mt-md">
       <q-splitter v-model="splitterModel">
         <template v-slot:before>
           <q-tabs v-model="tab" vertical class="text-teal">
@@ -36,7 +36,7 @@
           </q-tab-panels>
         </template>
       </q-splitter>
-    </div>
+    </div> -->
   </q-page>
 </template>
 
