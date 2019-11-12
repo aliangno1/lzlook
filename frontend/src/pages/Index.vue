@@ -1,6 +1,6 @@
 <template>
   <q-page class="full-height">
-    <div class="row">
+    <!-- <div class="row">
       <div class="col">
         <a href="https://github.com/aliangno1/lzlook">
           <img
@@ -25,7 +25,7 @@
           </q-avatar>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <q-form
       @submit="search(keyword)"
