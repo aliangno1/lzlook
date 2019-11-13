@@ -53,7 +53,7 @@
       </div>
     </q-footer>
 
-    <q-drawer v-model="drawer" show-if-above :width="200" :breakpoint="400">
+    <q-drawer v-model="drawer" :width="200" :breakpoint="400">
       <q-scroll-area
         style="height: calc(100% - 150px); margin-top: 150px; border-right: 1px solid #ddd"
       >
@@ -139,11 +139,7 @@ export default {
         this.$store.commit('lzlook/update', { keyword: value })
       }
     },
-    ...mapState('lzlook', [
-      'user',
-      'isLogin',
-      'isShowFooter'
-    ])
+    ...mapState('lzlook', ['user', 'isLogin', 'isShowFooter'])
   },
   methods: {
     async search (keyword) {
@@ -156,7 +152,9 @@ export default {
       }
     },
     to (path) {
-      this.$router.push(path)
+      if (this.$route.path !== path) {
+        this.$router.push(path)
+      }
     },
     toLogin () {
       if (this.isLogin) {
@@ -184,7 +182,7 @@ export default {
 }
 </script>
 
-<style >
+<style>
 a:link {
   text-decoration: none;
   color: blue;

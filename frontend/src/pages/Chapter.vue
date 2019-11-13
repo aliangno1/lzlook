@@ -2,13 +2,7 @@
   <q-page padding class="bg-amber-1 q-pb-md">
     <q-card class="bg-orange-2" id="top">
       <div class="q-pl-sm q-pt-xs">
-        <q-btn
-          flat
-          @click="showDrawer"
-          rounded
-          dense
-          icon="fas fa-list-ul"
-        />
+        <q-btn flat @click="showDrawer" rounded dense icon="fas fa-list-ul" />
       </div>
       <q-card-section>
         <div class="text-center">
@@ -26,7 +20,7 @@
             <q-btn @click="toChapter(chapter.previous)" label="上一章"></q-btn>
           </div>
           <div class="col text-center">
-            <q-btn @click="toChapter(chapter.next)" label="下一章"></q-btn>
+            <q-btn @click="next(chapter.next)" label="下一章"></q-btn>
           </div>
         </div>
       </q-card-section>
@@ -72,10 +66,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('lzlook', [
-      'chapter',
-      'novel'
-    ]),
+    ...mapState('lzlook', ['chapter', 'novel']),
     position () {
       const current = this.novel.chapters.filter(item => {
         return item.name === this.chapter.name
@@ -86,6 +77,17 @@ export default {
   methods: {
     async toChapter (url) {
       await this.$store.dispatch('lzlook/chapter', { url })
+      window.scroll(0, 0)
+    },
+    async next (url) {
+      if (
+        this.novel.chapters[this.novel.chapters.length - 1].name ===
+        this.chapter.name
+      ) {
+        alert('已是最新章节')
+      } else {
+        await this.$store.dispatch('lzlook/chapter', { url })
+      }
       window.scroll(0, 0)
     },
     async toItemChapter (url) {
@@ -107,12 +109,14 @@ export default {
     }
   },
   created () {
-    this.$store.commit('lzlook/update', { isShowSearchHeader: true, isShowFooter: false })
+    this.$store.commit('lzlook/update', {
+      isShowSearchHeader: true,
+      isShowFooter: false
+    })
   },
   destroyed () {
     this.$store.commit('lzlook/update', { isShowFooter: true })
   }
 }
 </script>
-<style scoped>
-</style>
+<style scoped></style>
