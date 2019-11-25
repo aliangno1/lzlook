@@ -12,6 +12,9 @@
             v-model="keyword"
             input-class="text-left"
             class="q-ml-md"
+            @focus="isShowSearchHistory = true"
+            @blur="isShowSearchHistory = false"
+            autocomplete="off"
           >
             <template v-slot:append>
               <q-icon v-if="keyword === ''" name="search" />
@@ -23,6 +26,25 @@
               />
             </template>
           </q-input>
+          <q-list
+            bordered
+            v-show="isShowSearchHistory && searchRecords.length > 0"
+            style="position:fixed;width:200px"
+            class="q-mt-sm q-ml-md "
+          >
+            <q-item
+              dense
+              clickable
+              class="q-pa-none q-pl-sm text-black bg-white"
+              v-for="(item, index) in searchRecords"
+              :key="index"
+              @click="searchHistory(item)"
+            >
+              <q-item-section>
+                <q-item-label>{{ item }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
         </q-form>
       </q-toolbar>
     </q-header>
@@ -127,7 +149,8 @@ export default {
     return {
       drawer: false,
       avatar: '../statics/avatar/user.png',
-      isShowDisclaimer: false
+      isShowDisclaimer: false,
+      isShowSearchHistory: false
     }
   },
   computed: {
@@ -138,6 +161,10 @@ export default {
       set (value) {
         this.$store.commit('lzlook/update', { keyword: value })
       }
+    },
+    searchRecords: function () {
+      const records = this.$store.state.lzlook.searchRecords.slice()
+      return records.filter(item => item.indexOf(this.keyword) === 0).reverse()
     },
     ...mapState('lzlook', ['user', 'isLogin', 'isShowFooter'])
   },
@@ -150,6 +177,10 @@ export default {
       if (this.$route.path !== '/results') {
         this.$router.push('results')
       }
+    },
+    async searchHistory (item) {
+      this.keyword = item
+      await this.search(item)
     },
     to (path) {
       if (this.$route.path !== path) {
@@ -164,6 +195,9 @@ export default {
     },
     showDisclaimer () {
       this.isShowDisclaimer = true
+    },
+    showHistory () {
+      this.isShowSearchHistory = true
     }
   },
   // components: { HeaderComponent, FooterComponent },
@@ -171,11 +205,13 @@ export default {
     const listStr = storage.getItem('list')
     const novelStr = storage.getItem('novel')
     const chapterStr = storage.getItem('chapter')
+    const searchRecordsStr = storage.getItem('searchRecords')
     if (listStr) {
       this.$store.commit('lzlook/update', {
         list: JSON.parse(listStr),
         novel: JSON.parse(novelStr),
-        chapter: JSON.parse(chapterStr)
+        chapter: JSON.parse(chapterStr),
+        searchRecords: searchRecordsStr ? JSON.parse(searchRecordsStr) : []
       })
     }
   }

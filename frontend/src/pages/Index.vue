@@ -50,6 +50,7 @@
           placeholder="请输入完整小说名"
           class="col-sm-8 col-md-6 col-xs-11"
           style="max-width:600px"
+          autocomplete="off"
         >
           <template v-slot:append>
             <q-icon name="search" />

@@ -4,5 +4,6 @@ export default {
   isShowFooter: true,
   isShowTips: true,
   user: {},
-  isLogin: false
+  isLogin: false,
+  searchRecords: []
 }

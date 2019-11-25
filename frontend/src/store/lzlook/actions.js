@@ -9,6 +9,12 @@ export async function search ({ commit, state }) {
   try {
     const { data: { list } } = await api.search({ keyword })
     storage.setItem('list', JSON.stringify(list))
+    // const searchRecords = state.searchRecords
+    // searchRecords.push(keyword)
+    // if (searchRecords.size > 3) {
+    //   searchRecords.remove(searchRecords[0])
+    // }
+    commit('updateSearchRecords', { keyword })
     commit('update', { list })
   } finally {
     LoadingBar.stop()
