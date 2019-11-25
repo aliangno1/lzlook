@@ -84,7 +84,18 @@ export default {
         this.novel.chapters[this.novel.chapters.length - 1].name ===
         this.chapter.name
       ) {
-        alert('已是最新章节')
+        await this.$store.dispatch('lzlook/novel', { url: this.novel.source })
+        if (
+          this.novel.chapters[this.novel.chapters.length - 1].name ===
+          this.chapter.name
+        ) {
+          alert('已是最新章节')
+        } else {
+          const newChapterIndex = this.novel.chapters.indexOf(this.chapter.name)
+          const newChapter = this.novel.chapters[newChapterIndex]
+          this.$store.commit('lzlook/update', { chapter: newChapter })
+          await this.$store.dispatch('lzlook/chapter', { url })
+        }
       } else {
         await this.$store.dispatch('lzlook/chapter', { url })
       }

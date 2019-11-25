@@ -174,6 +174,7 @@ export default {
         return
       }
       await this.$store.dispatch('lzlook/search')
+      this.isShowSearchHistory = false
       if (this.$route.path !== '/results') {
         this.$router.push('results')
       }
