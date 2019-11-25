@@ -1,4 +1,4 @@
-package com.lzlook.backend.service.impl;
+package com.lzlook.backend.service.impl.site;
 
 import com.lzlook.backend.bean.Chapter;
 import com.lzlook.backend.bean.Novel;
@@ -18,10 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
-@Service("www.biqukan.com")
-public class BiqukanComCrawler implements NovelCrawlerService {
-    private final static String source = "www.biqukan.com";
-    private final static String sourceUri = "https://www.biqukan.com";
+@Service("www.biquge.cm")
+public class BiqugeCmCrawler implements NovelCrawlerService {
+    private final static String source = "www.biquge.cm";
+    private final static String sourceUri = "https://www.biquge.cm";
 
     @Override
     @Async
@@ -49,9 +49,9 @@ public class BiqukanComCrawler implements NovelCrawlerService {
         try {
             doc = Jsoup.connect(url).get();
             novel = new Novel();
-            novel.setName(doc.select("body > div.book > div.info > h2").get(0).html());
+            novel.setName(doc.select("#maininfo > #info > h1").get(0).html());
             novel.setSource(url);
-            Elements chapterNodes = doc.select("body > div.listmain > dl > dd > a");
+            Elements chapterNodes = doc.select("#list > dl > dd > a");
             List<Chapter> chapters = new ArrayList<>();
             for (Element node : chapterNodes) {
                 Chapter chapter = new Chapter();
@@ -76,11 +76,10 @@ public class BiqukanComCrawler implements NovelCrawlerService {
             doc = Jsoup.connect(url).get();
             chapter = new Chapter();
             chapter.setUrl(url);
-
-            chapter.setName(doc.select("#wrapper > div.book.reader > div.content > h1").get(0).html());
+            chapter.setName(doc.select("#wrapper > div.content_read > div > div.bookname > h1").get(0).html());
             chapter.setContent(doc.select("#content").html().replaceAll("\n", ""));
-            String previousUrl = doc.select("#wrapper > div.book.reader > div.content > div.page_chapter > ul > li:nth-child(1) > a").get(0).attr("href");
-            String nextUrl = doc.select("#wrapper > div.book.reader > div.content > div.page_chapter > ul > li:nth-child(3) > a").get(0).attr("href");
+            String previousUrl = doc.select("#wrapper > div.content_read > div > div.bookname > div.bottem1 > a:nth-child(2)").get(0).attr("href");
+            String nextUrl = doc.select("#wrapper > div.content_read > div > div.bookname > div.bottem1 > a:nth-child(4)").get(0).attr("href");
             previousUrl = previousUrl.endsWith(".html") ? sourceUri + previousUrl : url;
             nextUrl = nextUrl.endsWith(".html") ? sourceUri + nextUrl : url;
             chapter.setPrevious(previousUrl);
