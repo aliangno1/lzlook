@@ -1,6 +1,15 @@
 <template>
   <q-page class="q-mb-xl">
-    <div class="q-mt-md q-mx-md" style="white-space:nowrap; overflow:hidden;">
+    <div v-if="!list || list.length < 1">
+      <q-item>
+        <q-item-section>
+          <q-item-label class="text-center">
+            暂无搜索结果
+          </q-item-label>
+        </q-item-section>
+      </q-item>
+    </div>
+    <div v-else class="q-mt-md q-mx-md" style="white-space:nowrap; overflow:hidden;">
       <div v-for="(item, index) in list" :key="index" class="q-mb-md">
         <a
           v-if="item.parsed"
@@ -28,15 +37,12 @@
 </template>
 
 <script>
-
 import { mapState } from 'vuex'
 export default {
   // name: 'PageName',
 
   computed: {
-    ...mapState('lzlook', [
-      'list'
-    ])
+    ...mapState('lzlook', ['list'])
   },
   methods: {
     async novel (url) {

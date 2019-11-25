@@ -100,7 +100,7 @@
 
           <q-item clickable v-ripple @click="to('/chapter')">
             <q-item-section>
-              返回章节
+              当前章节
             </q-item-section>
           </q-item>
           <q-separator></q-separator>
@@ -209,9 +209,9 @@ export default {
     const searchRecordsStr = storage.getItem('searchRecords')
     if (listStr) {
       this.$store.commit('lzlook/update', {
-        list: JSON.parse(listStr),
-        novel: JSON.parse(novelStr),
-        chapter: JSON.parse(chapterStr),
+        list: listStr ? JSON.parse(listStr) : [],
+        novel: novelStr ? JSON.parse(novelStr) : {},
+        chapter: novelStr ? JSON.parse(chapterStr) : {},
         searchRecords: searchRecordsStr ? JSON.parse(searchRecordsStr) : []
       })
     }

@@ -1,58 +1,72 @@
 <template>
-  <q-page padding class="bg-amber-1 q-pb-md">
-    <q-card class="bg-orange-2" id="top">
-      <div class="q-pl-sm q-pt-xs">
-        <q-btn flat @click="showDrawer" rounded dense icon="fas fa-list-ul" />
-      </div>
-      <q-card-section>
-        <div class="text-center">
-          <div class="text-h5 q-mb-lg q-mt-sm">
-            {{ chapter.name }}
-          </div>
+  <q-page class="bg-amber-1 q-pb-md">
+    <div v-if="!chapter || !chapter.content">
+      <q-item>
+        <q-item-section>
+          <q-item-label class="text-center">
+            暂无当前章节
+          </q-item-label>
+        </q-item-section>
+      </q-item>
+    </div>
+    <div v-else class="q-pa-sm">
+      <q-card class="bg-orange-2" id="top">
+        <div class="q-pl-sm q-pt-xs">
+          <q-btn flat @click="showDrawer" rounded dense icon="fas fa-list-ul" />
         </div>
-        <div
-          id="content"
-          v-html="chapter.content"
-          class="q-mx-md text-subtitle1"
-        ></div>
-        <div class="row q-mt-md">
-          <div class="col text-center">
-            <q-btn @click="toChapter(chapter.previous)" label="上一章"></q-btn>
+        <q-card-section>
+          <div class="text-center">
+            <div class="text-h5 q-mb-lg q-mt-sm">
+              {{ chapter.name }}
+            </div>
           </div>
-          <div class="col text-center">
-            <q-btn @click="next(chapter.next)" label="下一章"></q-btn>
+          <div
+            id="content"
+            v-html="chapter.content"
+            class="q-mx-md text-subtitle1"
+          ></div>
+          <div class="row q-mt-md">
+            <div class="col text-center">
+              <q-btn
+                @click="toChapter(chapter.previous)"
+                label="上一章"
+              ></q-btn>
+            </div>
+            <div class="col text-center">
+              <q-btn @click="next(chapter.next)" label="下一章"></q-btn>
+            </div>
           </div>
-        </div>
-      </q-card-section>
-    </q-card>
-    <q-drawer
-      v-model="drawer"
-      :width="200"
-      :breakpoint="500"
-      overlay
-      bordered
-      content-class="bg-grey-2"
-    >
-      <q-scroll-area class="fit" ref="scrollArea">
-        <q-list v-for="(item, index) in novel.chapters" :key="index">
-          <q-item clickable v-ripple dense @click="toItemChapter(item.url)">
-            <q-item-section>
-              <q-item-label
-                caption
-                v-if="item.name === chapter.name"
-                class="text-red"
-              >
-                {{ item.name }}
-              </q-item-label>
-              <q-item-label caption v-else>
-                {{ item.name }}
-              </q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-separator v-if="index < novel.chapters.length - 1"></q-separator>
-        </q-list>
-      </q-scroll-area>
-    </q-drawer>
+        </q-card-section>
+      </q-card>
+      <q-drawer
+        v-model="drawer"
+        :width="200"
+        :breakpoint="500"
+        overlay
+        bordered
+        content-class="bg-grey-2"
+      >
+        <q-scroll-area class="fit" ref="scrollArea">
+          <q-list v-for="(item, index) in novel.chapters" :key="index">
+            <q-item clickable v-ripple dense @click="toItemChapter(item.url)">
+              <q-item-section>
+                <q-item-label
+                  caption
+                  v-if="item.name === chapter.name"
+                  class="text-red"
+                >
+                  {{ item.name }}
+                </q-item-label>
+                <q-item-label caption v-else>
+                  {{ item.name }}
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-separator v-if="index < novel.chapters.length - 1"></q-separator>
+          </q-list>
+        </q-scroll-area>
+      </q-drawer>
+    </div>
   </q-page>
 </template>
 

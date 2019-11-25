@@ -13,7 +13,7 @@ export function updateSearchRecords (state, payload) {
     state.searchRecords = searchRecords.filter(item => item !== keyword)
   }
   state.searchRecords.push(keyword)
-  if (state.searchRecords.length > 3) {
+  if (state.searchRecords.length > 5) {
     state.searchRecords.shift()
   }
   storage.setItem('searchRecords', JSON.stringify(state.searchRecords))
