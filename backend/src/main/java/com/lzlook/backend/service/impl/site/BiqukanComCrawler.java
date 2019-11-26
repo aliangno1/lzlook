@@ -3,7 +3,6 @@ package com.lzlook.backend.service.impl.site;
 import com.lzlook.backend.bean.Chapter;
 import com.lzlook.backend.bean.Novel;
 import com.lzlook.backend.bean.SearchResult;
-import com.lzlook.backend.constant.SearchType;
 import com.lzlook.backend.service.NovelCrawlerService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -22,11 +21,12 @@ import java.util.concurrent.Future;
 public class BiqukanComCrawler implements NovelCrawlerService {
     private final static String source = "www.biqukan.com";
     private final static String sourceUri = "https://www.biqukan.com";
+    private final static String searchUrl = "https://so.biqusoso.com/s.php?ie=utf-8&siteid=biqukan.com&q=";
 
     @Override
     @Async
     public Future<SearchResult> search(String keyword) {
-        return new AsyncResult<>(parseSearchResult(keyword, SearchType.KEYWORD));
+        return new AsyncResult<>(parseSearchResult(keyword));
     }
 
     @Override
@@ -39,8 +39,30 @@ public class BiqukanComCrawler implements NovelCrawlerService {
         return parseChapter(url);
     }
 
-    private SearchResult parseSearchResult(String keyword, SearchType type) {
-        return null;
+    private SearchResult parseSearchResult(String keyword) {
+        Document doc;
+        SearchResult result = null;
+        try {
+            doc = Jsoup.connect(searchUrl + keyword).get();
+            if (doc != null) {
+                Elements infos = doc.select("#search-main > div.search-list > ul > li:nth-child(2) > span.s2 > a");
+                Element info = infos.size() < 1 ? null : infos.get(0);
+                if (info != null) {
+                    String url = info.attr("href");
+                    doc = Jsoup.connect(url).get();
+                    result = new SearchResult();
+                    result.setUrl(doc.location());
+                    result.setTitle(doc.title());
+                    result.setSource(source);
+                    result.setParsed(true);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Jsoup解析出错--" + source);
+            e.printStackTrace();
+            return null;
+        }
+        return result;
     }
 
     private Novel parseNovel(String url) {
