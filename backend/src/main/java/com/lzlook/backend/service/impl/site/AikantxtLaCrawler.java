@@ -14,16 +14,15 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
-@Service("www.bqg5200.com")
-public class Bqg5200ComCrawler implements NovelCrawlerService {
-    private final static String source = "www.bqg5200.com";
-    private final static String sourceUri = "http://www.bqg5200.com";
-    private final static String searchUrl = "https://www.bqg5200.com/modules/article/search.php";
+@Service("www.aikantxt.la")
+public class AikantxtLaCrawler implements NovelCrawlerService {
+    private final static String source = "www.aikantxt.la";
+    private final static String sourceUri = "http://www.aikantxt.la";
+    private final static String searchUrl = "https://www.aikantxt.la/modules/article/search.php";
 
     @Override
     @Async
@@ -45,9 +44,9 @@ public class Bqg5200ComCrawler implements NovelCrawlerService {
 //        Document doc;
 //        SearchResult result = null;
 //        try {
-//            doc = Jsoup.connect(searchUrl).data("searchkey", keyword).followRedirects(true).post();
+//            doc = Jsoup.connect(searchUrl).data("searchkey", keyword).post();
 //            if (doc != null) {
-//                Elements infos = doc.select("#bookinfo > div.motion > a:nth-child(1)");
+//                Elements infos = doc.select("#info > h1");
 //                Element info = infos.size() < 1 ? null : infos.get(0);
 //                if (info != null) {
 //                    result = new SearchResult();
@@ -77,9 +76,9 @@ public class Bqg5200ComCrawler implements NovelCrawlerService {
         try {
             doc = Jsoup.connect(url).get();
             novel = new Novel();
-            novel.setName(doc.selectFirst("#smallcons > h1").html());
+            novel.setName(doc.select("#info > h1").get(0).html());
             novel.setSource(url);
-            Elements chapterNodes = doc.select("#readerlist > ul > li > a");
+            Elements chapterNodes = doc.select("#list > dl > dd > a");
             List<Chapter> chapters = new ArrayList<>();
             for (Element node : chapterNodes) {
                 Chapter chapter = new Chapter();
@@ -105,13 +104,12 @@ public class Bqg5200ComCrawler implements NovelCrawlerService {
             chapter = new Chapter();
             chapter.setUrl(url);
 
-            chapter.setName(doc.select("#center > div.title > h1").get(0).html());
+            chapter.setName(doc.select("#wrapper > div.content_read > div > div.bookname > h1").get(0).html());
             chapter.setContent(doc.select("#content").html().replaceAll("\n", ""));
-            String previousUrl = doc.select("#container > div.jump > div.jump1 > a:nth-child(2)").get(0).attr("href");
-            String internalUrl = doc.select("#container > div.jump > div.jump1 > a:nth-child(4)").get(0).attr("href");
-            String nextUrl = doc.select("#container > div.jump > div.jump1 > a:nth-child(6)").get(0).attr("href");
-            previousUrl = previousUrl.endsWith(".html") ? internalUrl + previousUrl : url;
-            nextUrl = nextUrl.endsWith(".html") ? internalUrl + nextUrl : url;
+            String previousUrl = doc.select("#wrapper > div.content_read > div > div.bottem2 > a:nth-child(2)").get(0).attr("href");
+            String nextUrl = doc.select("#wrapper > div.content_read > div > div.bottem2 > a:nth-child(4)").get(0).attr("href");
+            previousUrl = previousUrl.endsWith(".html") ? sourceUri + previousUrl : url;
+            nextUrl = nextUrl.endsWith(".html") ? sourceUri + nextUrl : url;
             chapter.setPrevious(previousUrl);
             chapter.setNext(nextUrl);
         } catch (Exception e) {
