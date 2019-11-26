@@ -14,15 +14,16 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
-@Service("www.biquku.la")
-public class BiqukuLaCrawler implements NovelCrawlerService {
-    private final static String source = "www.biquku.la";
-    private final static String sourceUri = "http://www.biquku.la";
-    private final static String searchUrl = "http://www.biquku.la/modules/article/search.php";
+@Service("www.biquge.lu")
+public class BiqugeLuCrawler implements NovelCrawlerService {
+    private final static String source = "www.biquge.lu";
+    private final static String sourceUri = "http://www.biquge.lu";
+    private final static String searchUrl = "https://so.biqusoso.com/s.php?ie=utf-8&siteid=biquge.lu&q=";
 
     @Override
     @Async
@@ -44,12 +45,12 @@ public class BiqukuLaCrawler implements NovelCrawlerService {
         Document doc;
         SearchResult result = null;
         try {
-            doc = Jsoup.connect(searchUrl).data("searchkey", keyword).post();
+            doc = Jsoup.connect(searchUrl + keyword).get();
             if (doc != null) {
-                Elements infos = doc.select("#main > table > tbody > tr:nth-child(2) > td:nth-child(1) > a");
+                Elements infos = doc.select("#search-main > div.search-list > ul > li:nth-child(2) > span.s2 > a");
                 Element info = infos.size() < 1 ? null : infos.get(0);
                 if (info != null) {
-                    String url = sourceUri + info.attr("href");
+                    String url = info.attr("href");
                     doc = Jsoup.connect(url).get();
                     result = new SearchResult();
                     result.setUrl(doc.location());
@@ -77,13 +78,13 @@ public class BiqukuLaCrawler implements NovelCrawlerService {
         try {
             doc = Jsoup.connect(url).get();
             novel = new Novel();
-            novel.setName(doc.select("#info > h1").get(0).html());
+            novel.setName(doc.select("body > div.book > div.info > h2").get(0).html());
             novel.setSource(url);
-            Elements chapterNodes = doc.select("#list > dl > dd > a");
+            Elements chapterNodes = doc.select("body > div.listmain > dl > dd > a");
             List<Chapter> chapters = new ArrayList<>();
             for (Element node : chapterNodes) {
                 Chapter chapter = new Chapter();
-                chapter.setUrl(url + node.attr("href"));
+                chapter.setUrl(sourceUri + node.attr("href"));
                 chapter.setName(node.html());
                 chapters.add(chapter);
             }
@@ -105,13 +106,12 @@ public class BiqukuLaCrawler implements NovelCrawlerService {
             chapter = new Chapter();
             chapter.setUrl(url);
 
-            chapter.setName(doc.select("#wrapper > div.content_read > div > div.bookname > h1").get(0).html());
+            chapter.setName(doc.select("#wrapper > div.book.reader > div.content > h1").get(0).html());
             chapter.setContent(doc.select("#content").html().replaceAll("\n", ""));
-            String previousUrl = doc.select("#wrapper > div.content_read > div > div.bottem2 > a:nth-child(2)").get(0).attr("href");
-            String internalUrl = doc.select("#wrapper > div.content_read > div > div.bottem2 > a:nth-child(3)").get(0).attr("href");
-            String nextUrl = doc.select("#wrapper > div.content_read > div > div.bottem2 > a:nth-child(4)").get(0).attr("href");
-            previousUrl = previousUrl.endsWith(".html") ? sourceUri + internalUrl + previousUrl : url;
-            nextUrl = nextUrl.endsWith(".html") ? sourceUri + internalUrl + nextUrl : url;
+            String previousUrl = doc.select("#wrapper > div.book.reader > div.content > div.page_chapter > ul > li:nth-child(1) > a").get(0).attr("href");
+            String nextUrl = doc.select("#wrapper > div.book.reader > div.content > div.page_chapter > ul > li:nth-child(3) > a").get(0).attr("href");
+            previousUrl = previousUrl.endsWith(".html") ? sourceUri + previousUrl : url;
+            nextUrl = nextUrl.endsWith(".html") ? sourceUri + nextUrl : url;
             chapter.setPrevious(previousUrl);
             chapter.setNext(nextUrl);
         } catch (Exception e) {
