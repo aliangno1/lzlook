@@ -13,7 +13,6 @@
             input-class="text-left"
             class="q-ml-md"
             @focus="isShowSearchHistory = true"
-            @blur="isShowSearchHistory = false"
             autocomplete="off"
           >
             <template v-slot:append>
@@ -32,18 +31,21 @@
             style="position:fixed;width:200px"
             class="q-mt-sm q-ml-md "
           >
-            <q-item
-              dense
-              clickable
-              class="q-pa-none q-pl-sm text-black bg-white"
+            <div
               v-for="(item, index) in searchRecords"
               :key="index"
               @click="searchHistory(item)"
             >
-              <q-item-section>
-                <q-item-label>{{ item }}</q-item-label>
-              </q-item-section>
-            </q-item>
+              <q-item
+                dense
+                clickable
+                class="q-pa-none q-pl-sm text-black bg-white"
+              >
+                <q-item-section>
+                  <q-item-label>{{ item }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </div>
           </q-list>
         </q-form>
       </q-toolbar>
@@ -180,7 +182,8 @@ export default {
       }
     },
     async searchHistory (item) {
-      this.keyword = item
+      this.$store.commit('lzlook/update', { keyword: item })
+      console.log(item)
       await this.search(item)
     },
     to (path) {
