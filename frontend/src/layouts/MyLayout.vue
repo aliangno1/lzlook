@@ -13,7 +13,7 @@
             input-class="text-left"
             class="q-ml-md"
             @focus="isShowSearchHistory = true"
-            autocomplete="off"
+            @blur="isShowSearchHistory = false"
           >
             <template v-slot:append>
               <q-icon v-if="keyword === ''" name="search" />
