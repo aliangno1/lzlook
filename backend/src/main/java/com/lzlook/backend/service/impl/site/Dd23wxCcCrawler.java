@@ -1,4 +1,4 @@
-package com.lzlook.backend.service.impl;
+package com.lzlook.backend.service.impl.site;
 
 import com.lzlook.backend.bean.Chapter;
 import com.lzlook.backend.bean.Novel;

@@ -1,4 +1,4 @@
-package com.lzlook.backend.service.impl;
+package com.lzlook.backend.service.impl.engine;
 
 import com.lzlook.backend.bean.SearchResult;
 import com.lzlook.backend.service.FetchEngineService;

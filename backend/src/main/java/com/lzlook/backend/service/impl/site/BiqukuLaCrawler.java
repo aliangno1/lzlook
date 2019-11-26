@@ -1,9 +1,8 @@
-package com.lzlook.backend.service.impl;
+package com.lzlook.backend.service.impl.site;
 
 import com.lzlook.backend.bean.Chapter;
 import com.lzlook.backend.bean.Novel;
 import com.lzlook.backend.bean.SearchResult;
-import com.lzlook.backend.constant.SearchType;
 import com.lzlook.backend.service.NovelCrawlerService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,19 +13,21 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
-@Service("www.biqukan.com")
-public class BiqukanComCrawler implements NovelCrawlerService {
-    private final static String source = "www.biqukan.com";
-    private final static String sourceUri = "https://www.biqukan.com";
+@Service("www.biquku.la")
+public class BiqukuLaCrawler implements NovelCrawlerService {
+    private final static String source = "www.biquku.la";
+    private final static String sourceUri = "http://www.biquku.la";
+    private final static String searchUrl = "http://www.biquku.la/modules/article/search.php";
 
     @Override
     @Async
     public Future<SearchResult> search(String keyword) {
-        return new AsyncResult<>(parseSearchResult(keyword, SearchType.KEYWORD));
+        return new AsyncResult<>(parseSearchResult(keyword));
     }
 
     @Override
@@ -39,8 +40,35 @@ public class BiqukanComCrawler implements NovelCrawlerService {
         return parseChapter(url);
     }
 
-    private SearchResult parseSearchResult(String keyword, SearchType type) {
-        return null;
+    private SearchResult parseSearchResult(String keyword) {
+        Document doc;
+        SearchResult result = null;
+        try {
+            doc = Jsoup.connect(searchUrl).data("searchkey", keyword).post();
+            if (doc != null) {
+                Elements infos = doc.select("#main > table > tbody > tr:nth-child(2) > td:nth-child(1) > a");
+                Element info = infos.size() < 1 ? null : infos.get(0);
+                if (info != null) {
+                    String url = sourceUri + info.attr("href");
+                    doc = Jsoup.connect(url).get();
+                    result = new SearchResult();
+                    result.setUrl(doc.location());
+                    result.setTitle(doc.title());
+                    result.setSource(source);
+                    result.setParsed(true);
+                }
+            }
+        } catch (UnsupportedEncodingException e) {
+            System.out.println("URLEncoder encode出错--" + source);
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            System.out.println("Jsoup解析出错--" + source);
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     private Novel parseNovel(String url) {
@@ -49,13 +77,13 @@ public class BiqukanComCrawler implements NovelCrawlerService {
         try {
             doc = Jsoup.connect(url).get();
             novel = new Novel();
-            novel.setName(doc.select("body > div.book > div.info > h2").get(0).html());
+            novel.setName(doc.select("#info > h1").get(0).html());
             novel.setSource(url);
-            Elements chapterNodes = doc.select("body > div.listmain > dl > dd > a");
+            Elements chapterNodes = doc.select("#list > dl > dd > a");
             List<Chapter> chapters = new ArrayList<>();
             for (Element node : chapterNodes) {
                 Chapter chapter = new Chapter();
-                chapter.setUrl(sourceUri + node.attr("href"));
+                chapter.setUrl(url + node.attr("href"));
                 chapter.setName(node.html());
                 chapters.add(chapter);
             }
@@ -77,10 +105,10 @@ public class BiqukanComCrawler implements NovelCrawlerService {
             chapter = new Chapter();
             chapter.setUrl(url);
 
-            chapter.setName(doc.select("#wrapper > div.book.reader > div.content > h1").get(0).html());
+            chapter.setName(doc.select("#wrapper > div.content_read > div > div.bookname > h1").get(0).html());
             chapter.setContent(doc.select("#content").html().replaceAll("\n", ""));
-            String previousUrl = doc.select("#wrapper > div.book.reader > div.content > div.page_chapter > ul > li:nth-child(1) > a").get(0).attr("href");
-            String nextUrl = doc.select("#wrapper > div.book.reader > div.content > div.page_chapter > ul > li:nth-child(3) > a").get(0).attr("href");
+            String previousUrl = doc.select("#wrapper > div.content_read > div > div.bottem2 > a:nth-child(2)").get(0).attr("href");
+            String nextUrl = doc.select("#wrapper > div.content_read > div > div.bottem2 > a:nth-child(4)").get(0).attr("href");
             previousUrl = previousUrl.endsWith(".html") ? sourceUri + previousUrl : url;
             nextUrl = nextUrl.endsWith(".html") ? sourceUri + nextUrl : url;
             chapter.setPrevious(previousUrl);
