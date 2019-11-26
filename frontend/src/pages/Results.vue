@@ -17,7 +17,7 @@
           @click="novel(item.url)"
           >{{ item.title }}</a
         >
-        <a v-else :href="item.url" @click="novel(item.url)">{{ item.title }}</a>
+        <a v-else :href="item.url">{{ item.title }}</a>
         <div class="text-caption">
           <span class="text-teal q-mr-sm">{{ item.source }}</span>
           <a :href="item.url">查看源网址</a>
