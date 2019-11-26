@@ -183,7 +183,6 @@ export default {
     },
     async searchHistory (item) {
       this.$store.commit('lzlook/update', { keyword: item })
-      console.log(item)
       await this.search(item)
     },
     to (path) {
