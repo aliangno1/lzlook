@@ -108,7 +108,7 @@ export default {
           const newChapterIndex = this.novel.chapters.indexOf(this.chapter.name)
           const newChapter = this.novel.chapters[newChapterIndex]
           this.$store.commit('lzlook/update', { chapter: newChapter })
-          await this.$store.dispatch('lzlook/chapter', { url })
+          await this.$store.dispatch('lzlook/chapter', { url: newChapter.url })
         }
       } else {
         await this.$store.dispatch('lzlook/chapter', { url })
