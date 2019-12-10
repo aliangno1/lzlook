@@ -1,6 +1,6 @@
 <template>
   <q-page class="bg-amber-1 q-pb-md">
-    <div v-if="!chapter || !chapter.content">
+    <div v-if="!chapter || !chapter.url">
       <q-item>
         <q-item-section>
           <q-item-label class="text-center">
@@ -106,7 +106,7 @@ export default {
           alert('已是最新章节')
         } else {
           const newChapterIndex = this.novel.chapters.indexOf(this.chapter.name)
-          const newChapter = this.novel.chapters[newChapterIndex]
+          const newChapter = this.novel.chapters[newChapterIndex + 1]
           this.$store.commit('lzlook/update', { chapter: newChapter })
           await this.$store.dispatch('lzlook/chapter', { url: newChapter.url })
         }
